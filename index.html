@@ -1,4 +1,4 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#075d73"><meta name="color-scheme" content="light">
 <title>نظام زوار دائرة الطرق بمحافظة الداخلية</title>
 <style>
 body{font-family:Tahoma,Arial;margin:0;background:#f3f6f7;color:#17323a}header{background:#0f4c5c;color:white;padding:20px}main{max-width:1100px;margin:20px auto;padding:10px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}button{background:#0f4c5c;color:white;border:0;border-radius:7px;padding:10px 15px;cursor:pointer}button.green{background:#287b4b}button.red{background:#a33d3d}.card{background:white;border-radius:12px;padding:18px;margin-bottom:15px;box-shadow:0 2px 12px #0001}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:#eaf2f4;padding:15px;border-radius:10px}.stat b{display:block;font-size:26px;margin-top:7px}input,select,textarea{width:100%;padding:10px;border:1px solid #ccd7da;border-radius:7px;box-sizing:border-box}label{font-size:13px;font-weight:bold}table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #ddd;text-align:right;font-size:13px}.hide{display:none}.badge{background:#e8f0f2;padding:4px 8px;border-radius:15px}.actions{display:flex;gap:5px;flex-wrap:wrap}.notice{padding:10px;background:#e6f5eb;border-radius:7px;margin:10px 0}@media(max-width:700px){.grid,.stats{grid-template-columns:1fr}}
@@ -44,6 +44,194 @@ linear-gradient(135deg,#063e50 0%,#075d73 48%,#0b7890 100%)}
 #appShell{display:none}.user-bar{max-width:1180px;margin:0 auto;padding:10px 18px 0;display:flex;justify-content:flex-start;align-items:center;gap:9px;color:#fff;position:relative;z-index:5}.user-chip{display:inline-flex;align-items:center;gap:8px;background:#ffffff1a;border:1px solid #ffffff38;border-radius:999px;padding:7px 11px;font-size:13px;backdrop-filter:blur(8px)}.logout-btn{padding:7px 12px;background:#ffffff;color:#075d73;border-radius:999px;box-shadow:none;font-size:12px}.logout-btn:hover{background:#edf6f7}
 @media(max-width:520px){.login-card{padding:24px 18px}.login-brand h1{font-size:20px}.user-bar{justify-content:center;flex-wrap:wrap}}
 
+
+/* ===== Responsive UX 2026 enhancement layer ===== */
+:root{
+  --bg:#f4f8f9;--surface:#ffffff;--surface-2:#f7fbfc;--text:#163946;--muted:#607882;
+  --primary:#075d73;--primary-2:#0b7890;--primary-soft:#e9f5f7;--success:#1f7a4d;--success-soft:#e9f7ef;
+  --danger:#a13b37;--danger-soft:#fff0ef;--warning:#9b6717;--warning-soft:#fff7e8;--line:#d9e7eb;
+  --radius-sm:12px;--radius:18px;--radius-lg:26px;--shadow:0 12px 34px rgba(22,65,78,.10);
+  --tap:48px;--safe-bottom:env(safe-area-inset-bottom,0px);--safe-top:env(safe-area-inset-top,0px)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{min-height:100dvh;background:linear-gradient(180deg,#eaf4f6 0,#f7fafb 330px,var(--bg) 100%);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.55}
+button,input,select,textarea{font:inherit}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button{min-height:var(--tap);border-radius:12px;padding:10px 16px;touch-action:manipulation;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,opacity .18s ease}
+button:hover{transform:translateY(-1px)}
+button:active{transform:translateY(0) scale(.985)}
+button:disabled{opacity:.58;cursor:not-allowed;transform:none}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(15,130,155,.28);outline-offset:2px}
+input,select,textarea{min-height:48px;font-size:16px;color:var(--text);background:#fff;border:1px solid #cbdde2;border-radius:12px;padding:12px 14px}
+textarea{min-height:116px;resize:vertical}
+input::placeholder,textarea::placeholder{color:#8aa0a8}
+label{font-size:14px;color:#294d59;margin-bottom:7px}
+
+#loginScreen{min-height:100dvh;padding:max(20px,var(--safe-top)) 18px max(20px,var(--safe-bottom));background:radial-gradient(circle at 15% 18%,rgba(216,173,85,.20),transparent 28%),linear-gradient(145deg,#063e50 0%,#075d73 48%,#0b7890 100%)}
+.login-card{width:min(440px,100%);border-radius:28px;padding:clamp(22px,5vw,34px);box-shadow:0 28px 80px rgba(0,36,48,.38);border:1px solid rgba(255,255,255,.68)}
+.login-brand .login-icon{width:76px;height:76px;font-size:35px}
+.login-brand h1{font-size:clamp(21px,5vw,25px)}
+.login-brand p{font-size:13.5px}
+.login-card input{width:100%}
+.login-card button{min-height:52px}
+.login-error{border-radius:12px}
+
+#appShell{min-height:100dvh}
+header{min-height:188px;border-bottom-left-radius:34px;border-bottom-right-radius:0}
+.user-bar{padding-top:max(10px,var(--safe-top));justify-content:flex-start}
+.user-chip,.sync-chip{min-height:38px;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:7px 11px;font-size:13px;backdrop-filter:blur(10px)}
+.sync-chip::before{content:"";width:8px;height:8px;border-radius:50%;background:#8ddfb0;box-shadow:0 0 0 3px rgba(141,223,176,.18)}
+.sync-chip.offline::before{background:#f3c36b}.sync-chip.error::before{background:#ef8b86}
+.logout-btn{min-height:38px;padding:7px 13px}
+.header-wrap{min-height:138px;padding-top:14px;padding-bottom:26px}
+.header-title h2{letter-spacing:-.2px}
+.header-title #clock{font-variant-numeric:tabular-nums}
+
+main{max-width:1180px;margin:-32px auto 28px;padding:0 18px 24px}
+.tabs{position:relative;z-index:10;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:780px;padding:8px;border-radius:18px}
+.tabs button{min-width:0;min-height:50px;display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:#31545f;box-shadow:none;padding:10px 12px}
+.tabs button .tab-icon{font-size:18px;line-height:1}
+.tabs button.active,.tabs button[aria-current="page"]{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;box-shadow:0 6px 18px rgba(7,93,115,.22)}
+.tabs button:hover:not(.active){background:#edf7f8}
+
+main>section:not(.hide){animation:panelIn .24s ease both}
+@keyframes panelIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.card{border-radius:var(--radius);padding:clamp(17px,3vw,23px);box-shadow:var(--shadow);border:1px solid #e1ebee}
+.card h3{font-size:clamp(18px,2.3vw,21px);margin-bottom:18px}
+.system-proposal{background:linear-gradient(135deg,#fff,#f6fbfc)}
+.system-proposal ul{padding-right:22px!important}
+.system-proposal li{margin-block:4px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:15px}
+.stat{min-width:0;border-radius:16px;padding:17px}
+.stat b{font-size:clamp(27px,4vw,34px);font-variant-numeric:tabular-nums}
+#deps{grid-template-columns:repeat(4,minmax(0,1fr))}
+#deps .stat{min-height:72px;padding:14px;line-height:1.6}
+.grid{gap:16px}
+#form .grid>div{min-width:0}
+#saveVisitBtn{min-height:54px;font-size:16px;position:relative}
+.notice{padding:12px 14px;border-radius:12px;border:1px solid #bee3cb;background:var(--success-soft);color:#20583b}
+
+.actions,.toolbar{gap:8px;align-items:center}
+#list .actions{display:grid;grid-template-columns:minmax(220px,1.6fr) minmax(190px,1fr) auto auto}
+#list .actions>input,#list .actions>select{width:100%;min-width:0}
+#deleteTools{border-radius:14px!important}
+#deleteTools button{margin:3px}
+#deleteTools label{min-height:44px;padding:6px 0}
+input[type="checkbox"]{accent-color:var(--primary);min-width:20px;min-height:20px}
+
+#table,#rep{width:100%;overflow-x:auto;border-radius:14px;scrollbar-gutter:stable}
+table{border:1px solid #e1eaed;border-radius:14px;overflow:hidden;border-collapse:separate;border-spacing:0}
+th{position:sticky;top:0;z-index:1;background:#edf5f7;color:#204d5c;white-space:nowrap}
+th,td{padding:12px 11px;border-bottom:1px solid #e5edef;vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#f9fcfd}
+.badge{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:5px 10px;border-radius:999px;font-size:12px;white-space:nowrap}
+.badge.status-scheduled{background:#eef4f6;color:#315f6d}
+.badge.status-inside{background:#e8f7ef;color:#17623d}
+.badge.status-done{background:#f4f0ea;color:#72522a}
+.table-actions{display:flex;gap:6px;flex-wrap:wrap}
+.table-actions button{min-height:40px;padding:7px 11px;font-size:12.5px;box-shadow:none}
+.empty-state{padding:34px 18px;text-align:center;color:var(--muted);background:#fafcfd;border:1px dashed #cbdde2;border-radius:16px}
+.empty-state strong{display:block;color:var(--text);font-size:17px;margin-bottom:6px}
+
+.report-filters{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
+.report-filters label{min-width:180px;flex:1;margin:0}
+.report-actions{margin-bottom:10px}
+
+.toast-region{position:fixed;left:16px;bottom:20px;z-index:9999;display:grid;gap:8px;pointer-events:none;max-width:min(390px,calc(100vw - 32px))}
+.toast{background:#173f4b;color:#fff;border-radius:14px;padding:12px 15px;box-shadow:0 14px 40px rgba(0,0,0,.22);animation:toastIn .22s ease both;font-size:14px}
+.toast.success{background:#1e6e48}.toast.error{background:#8f3632}.toast.warning{background:#855c1d}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+@media(max-width:900px){
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #deps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #list .actions{grid-template-columns:1fr 1fr}
+  #list .actions button{width:100%}
+}
+@media(max-width:700px){
+  body{background:linear-gradient(180deg,#eaf4f6 0,#f7fafb 260px,var(--bg) 100%)}
+  header{min-height:160px;border-bottom-left-radius:26px}
+  .user-bar{padding:8px 14px 0;gap:6px;justify-content:space-between;flex-wrap:nowrap}
+  .user-chip{max-width:45vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sync-chip{display:none}
+  .logout-btn{min-height:38px;font-size:11.5px}
+  .header-wrap{min-height:112px;padding:10px 18px 22px;display:block;text-align:center}
+  .header-title{text-align:center!important}
+  .header-title h2{font-size:19px!important;line-height:1.55;margin-bottom:7px}
+  .header-title h2:before{width:40px!important;height:40px!important;font-size:21px!important;margin-left:8px!important}
+  .header-title:after{font-size:11.5px}
+  .header-title #clock{font-size:11.5px;margin-top:7px}
+  main{margin:-18px auto 0;padding:0 12px calc(92px + var(--safe-bottom))}
+  .tabs{position:fixed;inset:auto 0 0 0;z-index:1000;max-width:none;width:100%;grid-template-columns:repeat(4,1fr);gap:2px;margin:0;padding:7px 6px calc(7px + var(--safe-bottom));border:0;border-top:1px solid #d9e7eb;border-radius:18px 18px 0 0;background:rgba(255,255,255,.96);box-shadow:0 -10px 34px rgba(16,60,73,.13);backdrop-filter:blur(18px)}
+  .tabs button{min-height:58px;padding:6px 4px;border-radius:12px;flex-direction:column;gap:4px;font-size:11px;line-height:1.15}
+  .tabs button .tab-icon{font-size:19px}
+  .tabs button.active{box-shadow:none}
+  .card{margin-bottom:12px;padding:16px;border-radius:16px;box-shadow:0 7px 22px rgba(22,75,89,.08)}
+  .card h3{font-size:18px;margin-bottom:15px}
+  .system-proposal ul{font-size:13.5px;line-height:1.8!important}
+  .stats{gap:9px;margin-bottom:12px}
+  .stat{padding:14px;font-size:12.5px;min-height:96px;display:flex;flex-direction:column;justify-content:center}
+  .stat b{font-size:28px;margin-top:4px}
+  #deps{gap:9px}
+  #deps .stat{min-height:72px;font-size:12.5px}
+  .grid{grid-template-columns:1fr;gap:13px}
+  #form .grid>div[style*="grid-column"]{grid-column:auto!important}
+  input,select,textarea{font-size:16px}
+  #list .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  #q{grid-column:1/-1}
+  #fd{grid-column:1/-1}
+  #list .actions button{min-width:0}
+  #deleteTools{padding:11px!important}
+  #deleteTools>div:first-child{font-size:13px}
+  #deleteTools button{width:100%;margin:4px 0}
+  #deleteTools label{width:100%;margin:0!important}
+  .report-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .report-filters label{min-width:0}
+  .report-filters button{grid-column:1/-1;width:100%}
+  .report-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .report-actions button{min-width:0;padding-inline:8px}
+  #table,#rep{overflow:visible}
+  #table table,#rep table{display:block;border:0;background:transparent;overflow:visible}
+  #table thead,#rep thead{display:none}
+  #table tbody,#rep tbody{display:grid;gap:10px}
+  #table tr,#rep tr{display:block;background:#fff;border:1px solid #dfeaec;border-radius:15px;overflow:hidden;box-shadow:0 4px 16px rgba(22,75,89,.06)}
+  #table td,#rep td{display:grid;grid-template-columns:minmax(92px,38%) 1fr;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid #edf2f3;text-align:right!important;white-space:normal!important;min-height:44px}
+  #table td:last-child,#rep td:last-child{border-bottom:0}
+  #table td::before,#rep td::before{content:attr(data-label);font-weight:700;color:#56717a;font-size:12px}
+  #table td.no-print{grid-template-columns:32px 1fr}
+  #table td.no-print::before{content:"تحديد"}
+  #table td.actions-cell{display:block;padding:11px 12px}
+  #table td.actions-cell::before{display:block;content:"الإجراء";margin-bottom:8px}
+  .table-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .table-actions button{width:100%;min-height:44px}
+  .badge{justify-self:start}
+  .toast-region{left:12px;right:12px;bottom:calc(84px + var(--safe-bottom));max-width:none}
+}
+@media(max-width:390px){
+  .user-chip{max-width:42vw;font-size:11.5px}
+  .header-title h2{font-size:17px!important}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{padding:12px;min-height:90px}
+  .stat b{font-size:25px}
+  #deps{grid-template-columns:1fr}
+  .tabs button{font-size:10.5px}
+  .report-actions{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+@media print{
+  body{background:#fff}.toast-region,.sync-chip{display:none!important}main{margin:0;padding:0}.card{border:0;box-shadow:none}
+}
+
+
+.site-footer{max-width:1180px;margin:8px auto 24px;padding:0 18px;text-align:center;color:#58717a;font-size:12.5px;line-height:1.8}
+.site-footer .footer-inner{padding:14px 16px;border-top:1px solid #dbe7ea}
+@media(max-width:700px){.site-footer{margin:4px auto calc(88px + var(--safe-bottom));padding:0 14px;font-size:11.5px}.site-footer .footer-inner{padding:12px 8px}}
+@media print{.site-footer{margin:12px 0 0;padding:0;font-size:10px;color:#555}.site-footer .footer-inner{border-top:1px solid #bbb;padding-top:8px}}
 </style></head><body>
 <section id="loginScreen">
   <div class="login-card">
@@ -65,26 +253,31 @@ linear-gradient(135deg,#063e50 0%,#075d73 48%,#0b7890 100%)}
 </section>
 <div id="appShell">
 <header>
-  <div class="user-bar no-print"><span class="user-chip">👤 <span id="currentUsername"></span></span><button type="button" class="logout-btn" onclick="logoutUser()">تسجيل الخروج</button></div>
+  <div class="user-bar no-print"><span class="user-chip" title="المستخدم الحالي">👤 <span id="currentUsername"></span></span><span id="syncStatus" class="sync-chip" aria-live="polite">متصل بقاعدة البيانات</span><button type="button" class="logout-btn" onclick="logoutUser()">تسجيل الخروج</button></div>
   <div class="header-wrap"><div class="header-title"><h2>نظام إدارة زوار دائرة الطرق بمحافظة الداخلية</h2><div id="clock"></div></div></div>
 </header>
 <main>
-<div class="tabs no-print"><button type="button" onclick="tab('home')">الرئيسية</button><button type="button" onclick="tab('add')">تسجيل زائر</button><button type="button" onclick="tab('list')">سجل الزيارات</button><button type="button" onclick="tab('report')">التقارير</button></div>
+<nav class="tabs no-print" aria-label="التنقل الرئيسي">
+<button type="button" data-tab="home" onclick="tab('home')"><span class="tab-icon">⌂</span><span>الرئيسية</span></button>
+<button type="button" data-tab="add" onclick="tab('add')"><span class="tab-icon">＋</span><span>تسجيل زائر</span></button>
+<button type="button" data-tab="list" onclick="tab('list')"><span class="tab-icon">☷</span><span>سجل الزيارات</span></button>
+<button type="button" data-tab="report" onclick="tab('report')"><span class="tab-icon">▤</span><span>التقارير</span></button>
+</nav>
 
 <section id="home"><div class="card system-proposal"><h3>نظام مقترح للتطبيق</h3><ul style="line-height:2;margin:0;padding-right:24px"><li>تسجيل الزائر من الاستقبال مع إمكانية إتاحه تسجيل ذاتي عبر الجهاز اللوحي في النسخه المطوره.</li><li>اختيار القسم المراد زيارته والغرض من الزيارة.</li><li>رقم زيارة تلقائي مع إمكانية المشاركة وطباعة بطاقة زائر .</li><li>تسجيل وقت الدخول والخروج وحالة الزيارة.</li><li>بحث وتصفية وتقارير يومية وشهرية وسنوية.</li></ul><p style="margin:14px 0 0;line-height:1.9;color:#526b74">هذه النسخة مرتبطة بقاعدة بيانات Firebase Cloud Firestore، وتظهر البيانات نفسها للأجهزة المتصلة بالنظام.</p></div><div class="stats"><div class="stat">إجمالي الزيارات<b id="total">0</b></div><div class="stat">داخل الدائرة<b id="inside">0</b></div><div class="stat">زيارات اليوم<b id="today">0</b></div><div class="stat">منتهية<b id="done">0</b></div></div>
 <div class="card"><h3>أقسام الدائرة</h3><div id="deps"></div></div></section>
 
-<section id="add" class="hide"><div class="card"><h3>تسجيل زائر جديد</h3><div id="msg"></div>
+<section id="add" class="hide"><div class="card"><h3>تسجيل زائر جديد</h3><div id="msg" role="status" aria-live="polite"></div>
 <form id="form"><div class="grid">
-<div><label>اسم الزائر الثلاثي *</label><input id="name" maxlength="100" placeholder="اكتب الاسم الثلاثي كاملًا"></div>
-<div><label>الهاتف</label><input id="phone"></div>
-<div><label>القسم *</label><select id="dept"><option value="">اختر القسم</option><option>قسم الصيانة</option><option>قسم الشؤون الإدارية والمالية</option><option>قسم التنسيق والمتابعة</option><option>قسم البريد والوثائق</option></select></div>
+<div><label for="name">اسم الزائر الثلاثي *</label><input id="name" maxlength="100" autocomplete="name" placeholder="اكتب الاسم الثلاثي كاملًا"></div>
+<div><label for="phone">الهاتف</label><input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="مثال: 9XXXXXXX"></div>
+<div><label for="dept">القسم *</label><select id="dept"><option value="">اختر القسم</option><option>قسم الصيانة</option><option>قسم الشؤون الإدارية والمالية</option><option>قسم التنسيق والمتابعة</option><option>قسم البريد والوثائق</option></select></div>
 
-<div style="grid-column:1/-1"><label>الغرض من الزيارة</label><textarea id="purpose" placeholder="اكتب الغرض من الزيارة"></textarea></div>
-<div><label>التاريخ</label><input id="date" type="date"></div><div><label>الوقت</label><input id="time" type="time"></div>
-</div><br><button type="button" id="saveVisitBtn" onclick="saveVisit()">حفظ الزيارة</button></form></div></section>
+<div style="grid-column:1/-1"><label for="purpose">الغرض من الزيارة</label><textarea id="purpose" placeholder="اكتب الغرض من الزيارة"></textarea></div>
+<div><label for="date">التاريخ</label><input id="date" type="date"></div><div><label for="time">الوقت</label><input id="time" type="time"></div>
+</div><br><button type="submit" id="saveVisitBtn">حفظ الزيارة</button></form></div></section>
 
-<section id="list" class="hide"><div class="card"><h3>سجل الزيارات</h3><div class="actions no-print"><input id="q" placeholder="بحث بالاسم أو رقم الزائر أو الهاتف" oninput="render()"><select id="fd" onchange="render()"><option value="">كل الأقسام</option><option>قسم الصيانة</option><option>قسم الشؤون الإدارية والمالية</option><option>قسم التنسيق والمتابعة</option><option>قسم البريد والوثائق</option></select><button type="button" onclick="window.print()">طباعة / PDF</button><button type="button" onclick="csv()">Excel</button></div><div style="margin:12px 0;text-align:left;">
+<section id="list" class="hide"><div class="card"><h3>سجل الزيارات</h3><div class="actions toolbar no-print"><input id="q" aria-label="بحث في سجل الزيارات" placeholder="بحث بالاسم أو رقم الزائر أو الهاتف" oninput="render()"><select id="fd" aria-label="تصفية حسب القسم" onchange="render()"><option value="">كل الأقسام</option><option>قسم الصيانة</option><option>قسم الشؤون الإدارية والمالية</option><option>قسم التنسيق والمتابعة</option><option>قسم البريد والوثائق</option></select><button type="button" onclick="window.print()">طباعة / PDF</button><button type="button" onclick="csv()">Excel</button></div><div style="margin:12px 0;text-align:left;">
 <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start;align-items:center;">
 <button type="button" onclick="toggleDeleteMode(true); return false;" style="background:#b7791f">حذف وتعديل</button>
 </div>
@@ -99,19 +292,23 @@ linear-gradient(135deg,#063e50 0%,#075d73 48%,#0b7890 100%)}
 <div id="table"></div></div></section>
 
 <section id="report" class="hide"><div class="card"><h3>كشف الزوار</h3>
-<div class="no-print" style="margin-bottom:12px;display:flex;gap:10px;align-items:end;flex-wrap:wrap">
+<div class="no-print report-filters">
 <label style="margin:0">من تاريخ<input type="date" id="reportFrom" onchange="report()" style="margin-top:5px"></label>
 <label style="margin:0">إلى تاريخ<input type="date" id="reportTo" onchange="report()" style="margin-top:5px"></label>
 <button type="button" onclick="clearReportDates()" style="background:#68777c">إظهار الكل</button>
 </div>
-<div class="actions no-print" style="margin-bottom:10px">
+<div class="actions no-print report-actions">
 <button type="button" onclick="printVisitorList()">طباعة</button>
 <button type="button" onclick="shareVisitorReport()">مشاركة</button>
 <button type="button" onclick="csv()">حفظ</button>
 </div>
 <div id="rep"></div></div></section>
 </main>
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">جميع الحقوق محفوظة لوزارة النقل والاتصالات وتقنية المعلومات - دائرة الطرق بمحافظة الداخلية 2026</div>
+</footer>
 </div>
+<div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
@@ -170,8 +367,10 @@ function startVisitsSync(){
     dash();
     render();
     report();
+    updateConnectionState('online','متصل بقاعدة البيانات');
   },(err)=>{
     console.error('Firestore read error:',err);
+    updateConnectionState('error','تعذر مزامنة البيانات');
     const m=document.getElementById('msg');
     if(m){m.className='notice';m.textContent='تعذر قراءة بيانات Firebase. تحقق من قواعد Firestore وصلاحية المستخدم.';}
   });
@@ -232,7 +431,28 @@ auth.onAuthStateChanged((user)=>{
     setTimeout(()=>document.getElementById('loginUsername')?.focus(),0);
   }
 });
-function tab(x){['home','add','list','report'].forEach(i=>document.getElementById(i).classList.toggle('hide',i!==x));if(x==='home')dash();if(x==='list')render();if(x==='report')report()}
+function tab(x){
+  ['home','add','list','report'].forEach(i=>document.getElementById(i).classList.toggle('hide',i!==x));
+  document.querySelectorAll('.tabs [data-tab]').forEach(btn=>{
+    const active=btn.dataset.tab===x;
+    btn.classList.toggle('active',active);
+    if(active) btn.setAttribute('aria-current','page'); else btn.removeAttribute('aria-current');
+  });
+  if(x==='home')dash();if(x==='list')render();if(x==='report')report();
+  if(window.innerWidth<701) window.scrollTo({top:0,behavior:'smooth'});
+}
+function statusClass(status){return status==='داخل الدائرة'?'status-inside':status==='منتهية'?'status-done':'status-scheduled'}
+function showToast(message,type='success'){
+  const region=document.getElementById('toastRegion'); if(!region)return;
+  const el=document.createElement('div'); el.className='toast '+type; el.textContent=message; region.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(8px)';setTimeout(()=>el.remove(),220)},3200);
+}
+function updateConnectionState(state,text){
+  const el=document.getElementById('syncStatus'); if(!el)return;
+  el.classList.remove('offline','error'); if(state!=='online')el.classList.add(state); el.textContent=text;
+}
+window.addEventListener('online',()=>updateConnectionState('online','متصل بالإنترنت'));
+window.addEventListener('offline',()=>updateConnectionState('offline','غير متصل بالإنترنت'));
 function uid(){return 'V-'+Date.now()+'-'+Math.floor(Math.random()*900+100)}
 function nextVisitorNo(){return data.reduce((m,v)=>Math.max(m,Number(v.visitorNo)||0),0)+1}
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
@@ -258,10 +478,13 @@ async function saveVisit(){
     return;
   }
 
+  const visitorName=(get('name').value||'').trim();
+  const visitorDept=get('dept').value;
+  if(!visitorName || !visitorDept){get('msg').className='notice';get('msg').textContent='يرجى إدخال اسم الزائر واختيار القسم.';showToast('أكمل الحقول المطلوبة','warning');return;}
   const payload={
-    name:(get('name').value||'').trim() || 'غير مسجل',
+    name:visitorName,
     phone:(get('phone').value||'').trim(),
-    dept:get('dept').value || 'غير محدد',
+    dept:visitorDept,
     date:get('date').value || new Date().toISOString().slice(0,10),
     time:get('time').value || new Date().toTimeString().slice(0,5),
     purpose:(get('purpose').value||'').trim(),
@@ -293,11 +516,13 @@ async function saveVisit(){
     get('date').value=new Date().toISOString().slice(0,10);
     get('msg').className='notice';
     get('msg').textContent=editingId ? 'تم حفظ تعديل الزيارة في Firebase بنجاح.' : 'تم حفظ الزيارة في Firebase بنجاح. رقم الزائر: '+visitorNo;
+    showToast(editingId?'تم حفظ التعديل بنجاح':'تم تسجيل الزائر رقم '+visitorNo,'success');
     window.editingVisitId=null;
   } catch(err){
     console.error('Firestore save error:',err);
     get('msg').className='notice';
     get('msg').textContent=firestoreErrorMessage(err);
+    showToast(firestoreErrorMessage(err),'error');
   } finally {
     if(saveBtn){saveBtn.disabled=false;saveBtn.textContent=window.editingVisitId?'حفظ التعديل':'حفظ الزيارة';}
   }
@@ -306,37 +531,28 @@ document.getElementById('form').addEventListener('submit',function(e){e.preventD
 function msg(t){document.getElementById('msg').className='notice';document.getElementById('msg').textContent=t}
 function dash(){total.textContent=data.length;inside.textContent=data.filter(v=>v.status==='داخل الدائرة').length;today.textContent=data.filter(v=>v.date===new Date().toISOString().slice(0,10)).length;done.textContent=data.filter(v=>v.status==='منتهية').length;deps.innerHTML=departments.map(d=>'<div class="stat">'+d+' : '+data.filter(v=>v.dept===d).length+' زيارة</div>').join('')}
 function render(){
- let q=(document.getElementById('q').value||'').toLowerCase();
- let d=fd.value;
- let a=data.filter(v=>
-   (!q || ((v.name||'')+' '+(v.visitorNo||'')+' '+(v.id||'')+' '+(v.phone||'')).toLowerCase().includes(q)) &&
-   (!d || v.dept===d)
- );
- let deleteMode=document.getElementById('deleteTools') && document.getElementById('deleteTools').style.display!=='none';
- let rows=a.map((v,i)=>{
-   let action='';
-   if(v.status==='مجدولة') action='<button class="green" onclick="checkIn(\''+v.id+'\')">دخول</button>';
-   if(v.status==='داخل الدائرة') action='<button class="red" onclick="checkOut(\''+v.id+'\')">خروج</button>';
-   action+=' <button onclick="card(\''+v.id+'\')">بطاقة</button>';
-   let selectCell=deleteMode ? '<td class="no-print"><input type="checkbox" class="visitSelect" value="'+esc(v.id)+'" style="width:auto"></td>' : '';
-   return '<tr>'+
-     selectCell+
-     '<td>'+esc(v.visitorNo || (data.indexOf(v)+1))+'</td>'+
-     '<td><strong>'+esc(v.name)+'</strong></td>'+
-     '<td>'+esc(v.dept)+'</td>'+
-     '<td>'+esc(v.date)+' '+esc(v.time)+'</td>'+
-     '<td><span class="badge">'+esc(v.status)+'</span></td>'+
-     '<td>'+action+'</td>'+
-   '</tr>';
- }).join('');
- let selectHead=deleteMode ? '<th class="no-print">تحديد</th>' : '';
- document.getElementById('table').innerHTML=
-   '<table><thead><tr>'+selectHead+
-   '<th>رقم الزائر</th><th>اسم الزائر</th><th>القسم</th>'+
-   '<th>التاريخ والوقت</th><th>الحالة</th><th>إجراء</th>'+
-   '</tr></thead><tbody>'+rows+'</tbody></table>';
+  let q=(document.getElementById('q').value||'').toLowerCase();
+  let d=fd.value;
+  let a=data.filter(v=>(!q || ((v.name||'')+' '+(v.visitorNo||'')+' '+(v.id||'')+' '+(v.phone||'')).toLowerCase().includes(q)) && (!d || v.dept===d));
+  let deleteMode=document.getElementById('deleteTools') && document.getElementById('deleteTools').style.display!=='none';
+  if(!a.length){document.getElementById('table').innerHTML='<div class="empty-state"><strong>لا توجد زيارات مطابقة</strong><span>جرّب تغيير كلمات البحث أو اختيار قسم آخر.</span></div>';return;}
+  let rows=a.map(v=>{
+    let action='';
+    if(v.status==='مجدولة') action='<button class="green" onclick="checkIn(\''+v.id+'\')">دخول</button>';
+    if(v.status==='داخل الدائرة') action='<button class="red" onclick="checkOut(\''+v.id+'\')">خروج</button>';
+    action+=' <button onclick="card(\''+v.id+'\')">بطاقة</button>';
+    let selectCell=deleteMode ? '<td class="no-print" data-label="تحديد"><input aria-label="تحديد زيارة '+esc(v.name)+'" type="checkbox" class="visitSelect" value="'+esc(v.id)+'" style="width:auto"></td>' : '';
+    return '<tr>'+selectCell+
+      '<td data-label="رقم الزائر">'+esc(v.visitorNo || (data.indexOf(v)+1))+'</td>'+ 
+      '<td data-label="اسم الزائر"><strong>'+esc(v.name)+'</strong></td>'+ 
+      '<td data-label="القسم">'+esc(v.dept)+'</td>'+ 
+      '<td data-label="التاريخ والوقت">'+esc(formatDateForDisplay(v.date))+' '+esc(formatTimeForDisplay(v.time))+'</td>'+ 
+      '<td data-label="الحالة"><span class="badge '+statusClass(v.status)+'">'+esc(v.status)+'</span></td>'+ 
+      '<td data-label="الإجراء" class="actions-cell"><div class="table-actions">'+action+'</div></td></tr>';
+  }).join('');
+  let selectHead=deleteMode ? '<th class="no-print">تحديد</th>' : '';
+  document.getElementById('table').innerHTML='<table><thead><tr>'+selectHead+'<th>رقم الزائر</th><th>اسم الزائر</th><th>القسم</th><th>التاريخ والوقت</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-
 function toggleDeleteMode(force){
  const tools=document.getElementById('deleteTools');
  const show=(typeof force==='boolean') ? force : tools.style.display==='none';
@@ -354,7 +570,6 @@ async function clearAllVisits(){
   if(!ok)return;
   try{
     await Promise.all(data.map(v=>visitsRef.doc(v.id).delete()));
-    await counterRef.set({lastNumber:0},{merge:true});
     const all=document.getElementById('selectAllVisits'); if(all) all.checked=false;
     alert('تم مسح جميع بيانات سجل الزوار من Firebase بنجاح.');
   }catch(err){
@@ -386,26 +601,31 @@ async function deleteSelectedVisits(){
   try{
     await Promise.all(ids.map(id=>visitsRef.doc(id).delete()));
     const all=document.getElementById('selectAllVisits'); if(all) all.checked=false;
-    alert('تم حذف الزيارات المحددة من Firebase بنجاح.');
+    showToast('تم حذف الزيارات المحددة بنجاح','success');
   }catch(err){
     console.error(err);
-    alert('تعذر حذف الزيارات من Firebase.');
+    showToast('تعذر حذف الزيارات من Firebase','error');
   }
 }
 async function checkIn(x){
-  try{await visitsRef.doc(x).update({status:'داخل الدائرة',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});}
-  catch(err){console.error(err);alert('تعذر تسجيل الدخول في Firebase.');}
+  try{await visitsRef.doc(x).update({status:'داخل الدائرة',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});showToast('تم تسجيل دخول الزائر','success');}
+  catch(err){console.error(err);showToast('تعذر تسجيل دخول الزائر','error');}
 }
 async function checkOut(x){
-  try{await visitsRef.doc(x).update({status:'منتهية',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});}
-  catch(err){console.error(err);alert('تعذر تسجيل الخروج في Firebase.');}
+  try{await visitsRef.doc(x).update({status:'منتهية',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});showToast('تم تسجيل خروج الزائر','success');}
+  catch(err){console.error(err);showToast('تعذر تسجيل خروج الزائر','error');}
 }
 function card(x){showCard(data.find(v=>v.id===x))}
 function showCard(v){
  if(!v){alert('تعذر العثور على بيانات الزائر.');return;}
  const w=window.open('','_blank','width=500,height=600');
  if(!w){alert('تعذر فتح بطاقة الزائر. يرجى السماح بالنوافذ المنبثقة لهذا الملف.');return;}
- const cardHtml=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بطاقة زائر</title><style>body{font-family:Tahoma,Arial;text-align:center;padding:30px;color:#17323a}.card{border:2px solid #0f4c5c;padding:25px;border-radius:15px}.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px}.actions button{font-family:Tahoma,Arial;font-size:14px;padding:10px 18px;border:0;border-radius:8px;background:#0f6f73;color:#fff;cursor:pointer}@media print{.actions{display:none}}</style></head><body><div class="card"><h2>بطاقة زائر</h2><h3>دائرة الطرق بمحافظة الداخلية</h3><hr><p>رقم الزائر: <b>${esc(v.visitorNo || (data.indexOf(v)+1))}</b></p><p>الزائر: ${esc(v.name)}</p><p>القسم: ${esc(v.dept)}</p><p>الغرض من الزيارة: ${esc(v.purpose)}</p><p>التاريخ: ${esc(formatDateForDisplay(v.date))} ${esc(formatTimeForDisplay(v.time))}</p><p style="font-size:55px">▣</p><div class="actions"><button id="shareBtn" type="button">مشاركة</button><button id="saveBtn" type="button">حفظ</button><button id="printBtn" type="button">طباعة</button></div></div></body></html>`;
+ const cardHtml=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بطاقة زائر</title><style>body{font-family:Tahoma,Arial;text-align:center;padding:30px;color:#17323a}.card{border:2px solid #0f4c5c;padding:25px;border-radius:15px}.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px}.actions button{font-family:Tahoma,Arial;font-size:14px;padding:10px 18px;border:0;border-radius:8px;background:#0f6f73;color:#fff;cursor:pointer}@media print{.actions{display:none}}
+.site-footer{max-width:1180px;margin:8px auto 24px;padding:0 18px;text-align:center;color:#58717a;font-size:12.5px;line-height:1.8}
+.site-footer .footer-inner{padding:14px 16px;border-top:1px solid #dbe7ea}
+@media(max-width:700px){.site-footer{margin:4px auto calc(88px + var(--safe-bottom));padding:0 14px;font-size:11.5px}.site-footer .footer-inner{padding:12px 8px}}
+@media print{.site-footer{margin:12px 0 0;padding:0;font-size:10px;color:#555}.site-footer .footer-inner{border-top:1px solid #bbb;padding-top:8px}}
+</style></head><body><div class="card"><h2>بطاقة زائر</h2><h3>دائرة الطرق بمحافظة الداخلية</h3><hr><p>رقم الزائر: <b>${esc(v.visitorNo || (data.indexOf(v)+1))}</b></p><p>الزائر: ${esc(v.name)}</p><p>القسم: ${esc(v.dept)}</p><p>الغرض من الزيارة: ${esc(v.purpose)}</p><p>التاريخ: ${esc(formatDateForDisplay(v.date))} ${esc(formatTimeForDisplay(v.time))}</p><p style="font-size:55px">▣</p><div class="actions"><button id="shareBtn" type="button">مشاركة</button><button id="saveBtn" type="button">حفظ</button><button id="printBtn" type="button">طباعة</button></div></div></body></html>`;
  w.document.open(); w.document.write(cardHtml); w.document.close();
  w.addEventListener('load',()=>{
    const d=w.document;
@@ -447,10 +667,10 @@ function clearReportDates(){
  if(f) f.value=''; if(t) t.value=''; report();
 }
 function report(){
- const rows=getReportData();
- rep.innerHTML='<table><tr><th>م</th><th>اسم الزائر</th><th>الهاتف</th><th>القسم</th><th>الغرض من الزيارة</th><th>التاريخ</th><th>الوقت</th><th>الحالة</th></tr>'+
- rows.map((v,i)=>'<tr><td>'+(i+1)+'</td><td><b>'+esc((v.name || 'غير مسجل'))+'</b></td><td>'+esc(v.phone)+'</td><td>'+esc(v.dept)+'</td><td>'+esc(v.purpose)+'</td><td style="white-space:nowrap;text-align:center">'+esc(formatDateForDisplay(v.date))+'</td><td style="white-space:nowrap;text-align:center">'+esc(formatTimeForDisplay(v.time))+'</td><td>'+esc(v.status)+'</td></tr>').join('')+
- '</table>';
+  const rows=getReportData();
+  if(!rows.length){rep.innerHTML='<div class="empty-state"><strong>لا توجد بيانات ضمن هذه الفترة</strong><span>غيّر نطاق التاريخ أو اضغط «إظهار الكل».</span></div>';return;}
+  rep.innerHTML='<table><thead><tr><th>م</th><th>اسم الزائر</th><th>الهاتف</th><th>القسم</th><th>الغرض من الزيارة</th><th>التاريخ</th><th>الوقت</th><th>الحالة</th></tr></thead><tbody>'+ 
+  rows.map((v,i)=>'<tr><td data-label="م">'+(i+1)+'</td><td data-label="اسم الزائر"><b>'+esc((v.name || 'غير مسجل'))+'</b></td><td data-label="الهاتف">'+esc(v.phone)+'</td><td data-label="القسم">'+esc(v.dept)+'</td><td data-label="الغرض من الزيارة">'+esc(v.purpose)+'</td><td data-label="التاريخ">'+esc(formatDateForDisplay(v.date))+'</td><td data-label="الوقت">'+esc(formatTimeForDisplay(v.time))+'</td><td data-label="الحالة"><span class="badge '+statusClass(v.status)+'">'+esc(v.status)+'</span></td></tr>').join('')+'</tbody></table>';
 }
 function printVisitorList(){
  const rows=getReportData();
@@ -458,7 +678,12 @@ function printVisitorList(){
  if(!w){ alert('تعذر فتح نافذة كشف الزوار. يرجى السماح بالنوافذ المنبثقة لهذا الملف.'); return; }
  const safeRows=JSON.stringify(rows).replace(/</g,'\\u003c');
  const bodyRows=rows.map((v,i)=>'<tr><td>'+(i+1)+'</td><td class="name">'+esc(v.name)+'</td><td>'+esc(v.phone)+'</td><td>'+esc(v.dept)+'</td><td>'+esc(v.purpose)+'</td><td class="date">'+esc(formatDateForDisplay(v.date))+'</td><td class="time">'+esc(formatTimeForDisplay(v.time))+'</td><td>'+esc(v.status)+'</td></tr>').join('');
- const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>كشف الزوار</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:Tahoma,Arial;padding:18px;color:#17323a}h2,h3{text-align:center;margin:6px 0}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #777;padding:8px 6px;text-align:center;font-size:11px}th{background:#eaf2f4}.name{font-weight:bold;text-align:right}.date,.time{white-space:nowrap}.share-print-actions{text-align:center;margin:18px 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.share-print-actions button{font-family:Tahoma,Arial;font-size:14px;padding:10px 18px;border:0;border-radius:8px;background:#0f6f73;color:#fff;cursor:pointer}@media print{.share-print-actions{display:none}}</style></head><body><div id="reportArea"><h2>دائرة الطرق بمحافظة الداخلية</h2><h3>كشف الزوار</h3><table><thead><tr><th>م</th><th>اسم الزائر</th><th>الهاتف</th><th>القسم</th><th>الغرض من الزيارة</th><th>التاريخ</th><th>الوقت</th><th>الحالة</th></tr></thead><tbody>${bodyRows}</tbody></table></div><div class="share-print-actions"><button type="button" onclick="window.print()">طباعة</button><button type="button" onclick="shareReportFile()">مشاركة</button><button type="button" onclick="saveReportFile()">حفظ</button></div><script>
+ const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>كشف الزوار</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:Tahoma,Arial;padding:18px;color:#17323a}h2,h3{text-align:center;margin:6px 0}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #777;padding:8px 6px;text-align:center;font-size:11px}th{background:#eaf2f4}.name{font-weight:bold;text-align:right}.date,.time{white-space:nowrap}.share-print-actions{text-align:center;margin:18px 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.share-print-actions button{font-family:Tahoma,Arial;font-size:14px;padding:10px 18px;border:0;border-radius:8px;background:#0f6f73;color:#fff;cursor:pointer}@media print{.share-print-actions{display:none}}
+.site-footer{max-width:1180px;margin:8px auto 24px;padding:0 18px;text-align:center;color:#58717a;font-size:12.5px;line-height:1.8}
+.site-footer .footer-inner{padding:14px 16px;border-top:1px solid #dbe7ea}
+@media(max-width:700px){.site-footer{margin:4px auto calc(88px + var(--safe-bottom));padding:0 14px;font-size:11.5px}.site-footer .footer-inner{padding:12px 8px}}
+@media print{.site-footer{margin:12px 0 0;padding:0;font-size:10px;color:#555}.site-footer .footer-inner{border-top:1px solid #bbb;padding-top:8px}}
+</style></head><body><div id="reportArea"><h2>دائرة الطرق بمحافظة الداخلية</h2><h3>كشف الزوار</h3><table><thead><tr><th>م</th><th>اسم الزائر</th><th>الهاتف</th><th>القسم</th><th>الغرض من الزيارة</th><th>التاريخ</th><th>الوقت</th><th>الحالة</th></tr></thead><tbody>${bodyRows}</tbody></table></div><div class="share-print-actions"><button type="button" onclick="window.print()">طباعة</button><button type="button" onclick="shareReportFile()">مشاركة</button><button type="button" onclick="saveReportFile()">حفظ</button></div><script>
 const REPORT_ROWS=${safeRows};
 function fmtDate(v){if(!v)return '';const p=String(v).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:v}
 function fmtTime(v){if(!v)return '';let p=String(v).split(':');let h=parseInt(p[0]||0),m=p[1]||'00',ap=h>=12?'م':'ص';h=h%12||12;return h+':'+m+' '+ap}
@@ -495,14 +720,13 @@ async function shareVisitorReport(){
  else if(choice==='2'){window.location.href='mailto:?subject='+encodeURIComponent(title)+'&body='+encodeURIComponent(text);}
 }
 
-setInterval(()=>clock.textContent=new Date().toLocaleString('ar-OM'),1000);dash()
+setInterval(()=>clock.textContent=new Date().toLocaleString('ar-OM'),1000);updateConnectionState(navigator.onLine?'online':'offline',navigator.onLine?'متصل بالإنترنت':'غير متصل بالإنترنت');dash()
 
 async function clearVisitorData(){
   const ok = window.confirm('هل أنت متأكد من مسح جميع بيانات سجل الزوار من Firebase؟\n\nسيتم حذف جميع الزيارات من قاعدة البيانات ولا يمكن التراجع عن العملية.');
   if(!ok) return;
   try {
     await Promise.all(data.map(v=>visitsRef.doc(v.id).delete()));
-    await counterRef.set({lastNumber:0},{merge:true});
     alert('تم مسح سجل الزوار من Firebase بالكامل بنجاح.');
   } catch (e) {
     alert('تعذر مسح السجل من Firebase. تحقق من الاتصال والصلاحيات.');
