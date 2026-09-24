@@ -308,7 +308,7 @@ tbody tr:hover{background:#f9fcfd}
 <div class="actions no-print report-actions">
 <button type="button" onclick="printVisitorList()">طباعة</button>
 <button type="button" onclick="shareVisitorReport()">مشاركة</button>
-<button type="button" onclick="csv()">حفظ</button>
+<button type="button" onclick="saveVisitorReportPDF(this)">حفظ PDF</button>
 </div>
 <div id="rep"></div></div></section>
 </main>
@@ -680,28 +680,190 @@ function report(){
   rep.innerHTML='<table><thead><tr><th>م</th><th>اسم الزائر</th><th>الهاتف</th><th>القسم</th><th>الغرض من الزيارة</th><th>التاريخ</th><th>الوقت</th><th>الحالة</th></tr></thead><tbody>'+ 
   rows.map((v,i)=>'<tr><td data-label="م">'+(i+1)+'</td><td data-label="اسم الزائر"><b>'+esc((v.name || 'غير مسجل'))+'</b></td><td data-label="الهاتف">'+esc(v.phone)+'</td><td data-label="القسم">'+esc(v.dept)+'</td><td data-label="الغرض من الزيارة">'+esc(v.purpose)+'</td><td data-label="التاريخ">'+esc(formatDateForDisplay(v.date))+'</td><td data-label="الوقت">'+esc(formatTimeForDisplay(v.time))+'</td><td data-label="الحالة"><span class="badge '+statusClass(v.status)+'">'+esc(v.status)+'</span></td></tr>').join('')+'</tbody></table>';
 }
+function reportPeriodLabel(){
+ const from=document.getElementById('reportFrom')?.value||'';
+ const to=document.getElementById('reportTo')?.value||'';
+ if(from&&to) return 'الفترة: من '+formatDateForDisplay(from)+' إلى '+formatDateForDisplay(to);
+ if(from) return 'من تاريخ: '+formatDateForDisplay(from);
+ if(to) return 'حتى تاريخ: '+formatDateForDisplay(to);
+ return 'جميع الزيارات المسجلة';
+}
+
+function reportRowsHtml(rows){
+ return rows.map((v,i)=>'<tr><td>'+(i+1)+'</td><td class="name">'+esc(v.name||'غير مسجل')+'</td><td>'+esc(v.phone)+'</td><td>'+esc(v.dept)+'</td><td class="purpose">'+esc(v.purpose)+'</td><td class="date">'+esc(formatDateForDisplay(v.date))+'</td><td class="time">'+esc(formatTimeForDisplay(v.time))+'</td><td>'+esc(v.status)+'</td></tr>').join('');
+}
+
 function printVisitorList(){
  const rows=getReportData();
- const w=window.open('','_blank','width=1100,height=750');
- if(!w){ alert('تعذر فتح نافذة كشف الزوار. يرجى السماح بالنوافذ المنبثقة لهذا الملف.'); return; }
- const safeRows=JSON.stringify(rows).replace(/</g,'\\u003c');
- const bodyRows=rows.map((v,i)=>'<tr><td>'+(i+1)+'</td><td class="name">'+esc(v.name)+'</td><td>'+esc(v.phone)+'</td><td>'+esc(v.dept)+'</td><td>'+esc(v.purpose)+'</td><td class="date">'+esc(formatDateForDisplay(v.date))+'</td><td class="time">'+esc(formatTimeForDisplay(v.time))+'</td><td>'+esc(v.status)+'</td></tr>').join('');
- const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>كشف الزوار</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:Tahoma,Arial;padding:18px;color:#17323a}h2,h3{text-align:center;margin:6px 0}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #777;padding:8px 6px;text-align:center;font-size:11px}th{background:#eaf2f4}.name{font-weight:bold;text-align:right}.date,.time{white-space:nowrap}.share-print-actions{text-align:center;margin:18px 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.share-print-actions button{font-family:Tahoma,Arial;font-size:14px;padding:10px 18px;border:0;border-radius:8px;background:#0f6f73;color:#fff;cursor:pointer}@media print{.share-print-actions{display:none}}
-.site-footer{max-width:1180px;margin:8px auto 24px;padding:0 18px;text-align:center;color:#58717a;font-size:12.5px;line-height:1.8}
-.site-footer .footer-inner{padding:14px 16px;border-top:1px solid #dbe7ea}
-@media(max-width:700px){.site-footer{margin:4px auto calc(88px + var(--safe-bottom));padding:0 14px;font-size:11.5px}.site-footer .footer-inner{padding:12px 8px}}
-@media print{.site-footer{margin:12px 0 0;padding:0;font-size:10px;color:#555}.site-footer .footer-inner{border-top:1px solid #bbb;padding-top:8px}}
-</style></head><body><div id="reportArea"><h2>دائرة الطرق بمحافظة الداخلية</h2><h3>كشف الزوار</h3><table><thead><tr><th>م</th><th>اسم الزائر</th><th>الهاتف</th><th>القسم</th><th>الغرض من الزيارة</th><th>التاريخ</th><th>الوقت</th><th>الحالة</th></tr></thead><tbody>${bodyRows}</tbody></table></div><div class="share-print-actions"><button type="button" onclick="window.print()">طباعة</button><button type="button" onclick="shareReportFile()">مشاركة</button><button type="button" onclick="saveReportFile()">حفظ</button></div><script>
-const REPORT_ROWS=${safeRows};
-function fmtDate(v){if(!v)return '';const p=String(v).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:v}
-function fmtTime(v){if(!v)return '';let p=String(v).split(':');let h=parseInt(p[0]||0),m=p[1]||'00',ap=h>=12?'م':'ص';h=h%12||12;return h+':'+m+' '+ap}
-function makeCanvas(){const rows=REPORT_ROWS,W=1600,titleH=150,rowH=58,headers=['م','اسم الزائر','الهاتف','القسم','الغرض من الزيارة','التاريخ','الوقت','الحالة'],widths=[70,260,170,260,330,160,150,145],H=titleH+rowH*(rows.length+1)+70,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,W,H);x.fillStyle='#17323a';x.textAlign='center';x.textBaseline='middle';x.direction='rtl';x.font='bold 32px Tahoma,Arial';x.fillText('دائرة الطرق بمحافظة الداخلية',W/2,45);x.font='bold 25px Tahoma,Arial';x.fillText('كشف الزوار',W/2,92);const tw=widths.reduce((a,b)=>a+b,0),sx=(W-tw)/2,sy=titleH;function cell(t,l,top,w,h,b,a){x.fillStyle=b?'#eaf2f4':'#fff';x.fillRect(l,top,w,h);x.strokeStyle='#777';x.strokeRect(l,top,w,h);x.fillStyle='#17323a';x.font=(b?'bold ':'')+'18px Tahoma,Arial';x.textAlign=a||'center';x.direction='rtl';t=String(t==null?'':t);if(t.length>32)t=t.slice(0,30)+'…';x.fillText(t,a==='right'?l+w-10:l+w/2,top+h/2,w-16)}let xx=sx;headers.forEach((h,i)=>{cell(h,xx,sy,widths[i],rowH,true);xx+=widths[i]});rows.forEach((v,r)=>{const vals=[r+1,v.name||'',v.phone||'',v.dept||'',v.purpose||'',fmtDate(v.date),fmtTime(v.time),v.status||''];let xx=sx;vals.forEach((val,i)=>{cell(val,xx,sy+rowH*(r+1),widths[i],rowH,false,i===1?'right':'center');xx+=widths[i]})});return c}
-function getReportImageBlob(){return new Promise(resolve=>{try{const c=makeCanvas();c.toBlob(blob=>resolve(blob||null),'image/png')}catch(e){resolve(null)}})}
-async function saveReportFile(){const blob=await getReportImageBlob();if(!blob){alert('تعذر تجهيز صورة الكشف');return}const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='كشف_الزوار.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
-async function shareReportFile(){const blob=await getReportImageBlob();if(!blob){alert('تعذر تجهيز صورة الكشف');return}const file=new File([blob],'كشف_الزوار.png',{type:'image/png'});try{if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){await navigator.share({title:'كشف زوار دائرة الطرق بمحافظة الداخلية',text:'كشف زوار دائرة الطرق بمحافظة الداخلية',files:[file]});return}}catch(e){if(e&&e.name==='AbortError')return}alert('المشاركة المباشرة غير مدعومة في هذا المتصفح. اضغط «حفظ» لحفظ صورة الكشف ثم شاركها من الهاتف.');}
-<\/script></body></html>`;
+ if(!rows.length){showToast('لا توجد بيانات ضمن الفترة المحددة للطباعة.','error');return;}
+ const w=window.open('','_blank','width=1200,height=820');
+ if(!w){ alert('تعذر فتح نافذة الطباعة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع.'); return; }
+ const period=esc(reportPeriodLabel());
+ const generated=esc(new Date().toLocaleString('ar-OM'));
+ const bodyRows=reportRowsHtml(rows);
+ const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>كشف الزوار</title><style>
+ @page{size:A4 landscape;margin:11mm}
+ *{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;margin:0;padding:18px;color:#17323a;background:#fff}
+ .head{text-align:center;border-bottom:2px solid #0b6478;padding-bottom:12px;margin-bottom:14px}
+ h1{font-size:22px;margin:0 0 7px;color:#0b5368}h2{font-size:17px;margin:0 0 7px}.meta{font-size:11px;color:#5b7078;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+ table{width:100%;border-collapse:collapse;table-layout:fixed}thead{display:table-header-group}tr{break-inside:avoid;page-break-inside:avoid}
+ th,td{border:1px solid #a9b9be;padding:7px 5px;text-align:center;font-size:10.5px;line-height:1.45;vertical-align:middle;word-break:break-word}
+ th{background:#e7f2f5;color:#17495a;font-weight:700}.name{font-weight:700;text-align:right}.purpose{text-align:right}.date,.time{white-space:nowrap}
+ th:nth-child(1),td:nth-child(1){width:5%}th:nth-child(2),td:nth-child(2){width:16%}th:nth-child(3),td:nth-child(3){width:11%}th:nth-child(4),td:nth-child(4){width:17%}th:nth-child(5),td:nth-child(5){width:24%}th:nth-child(6),td:nth-child(6){width:10%}th:nth-child(7),td:nth-child(7){width:9%}th:nth-child(8),td:nth-child(8){width:8%}
+ .footer{text-align:center;margin-top:14px;padding-top:8px;border-top:1px solid #cfdadd;font-size:9.5px;color:#61747b}
+ @media print{body{padding:0}.screen-actions{display:none!important}.footer{position:relative}}
+ </style></head><body>
+ <div class="head"><h1>وزارة النقل والاتصالات وتقنية المعلومات</h1><h2>دائرة الطرق بمحافظة الداخلية - كشف الزوار</h2><div class="meta"><span>${period}</span><span>عدد الزيارات: ${rows.length}</span><span>تاريخ الإصدار: ${generated}</span></div></div>
+ <table><thead><tr><th>م</th><th>اسم الزائر</th><th>الهاتف</th><th>القسم</th><th>الغرض من الزيارة</th><th>التاريخ</th><th>الوقت</th><th>الحالة</th></tr></thead><tbody>${bodyRows}</tbody></table>
+ <div class="footer">جميع الحقوق محفوظة لوزارة النقل والاتصالات وتقنية المعلومات - دائرة الطرق بمحافظة الداخلية 2026</div>
+ <script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script>
+ </body></html>`;
  w.document.open();w.document.write(html);w.document.close();
 }
+
+async function saveVisitorReportPDF(btn){
+ const rows=getReportData();
+ if(!rows.length){showToast('لا توجد بيانات ضمن الفترة المحددة للحفظ.','error');return;}
+ const oldText=btn?.textContent;
+ if(btn){btn.disabled=true;btn.textContent='جارٍ تجهيز PDF...';}
+ try{
+   const period=reportPeriodLabel();
+   const generated=new Date().toLocaleString('ar-OM');
+   const PAGE_W=1684, PAGE_H=1191; // A4 landscape ratio at screen-friendly resolution
+   const rowsPerPage=10;
+   const pages=[];
+   for(let i=0;i<rows.length;i+=rowsPerPage) pages.push(rows.slice(i,i+rowsPerPage));
+
+   function roundedRect(ctx,x,y,w,h,r){
+     ctx.beginPath();
+     ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+     ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+     ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+     ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+   }
+
+   function wrapText(ctx,text,maxWidth,maxLines=3){
+     text=String(text??'').trim();
+     if(!text) return [''];
+     const words=text.split(/\s+/);
+     const lines=[];
+     let line='';
+     for(const word of words){
+       const test=line?line+' '+word:word;
+       if(ctx.measureText(test).width<=maxWidth || !line){line=test;}
+       else{lines.push(line);line=word;if(lines.length>=maxLines-1)break;}
+     }
+     if(line && lines.length<maxLines) lines.push(line);
+     const used=lines.join(' ').split(/\s+/).filter(Boolean).length;
+     if(used<words.length && lines.length){
+       let last=lines[lines.length-1];
+       while(last.length>1 && ctx.measureText(last+'…').width>maxWidth) last=last.slice(0,-1);
+       lines[lines.length-1]=last+'…';
+     }
+     return lines;
+   }
+
+   function drawCell(ctx,text,x,y,w,h,opts={}){
+     ctx.fillStyle=opts.bg||'#ffffff';ctx.fillRect(x,y,w,h);
+     ctx.strokeStyle='#a9b9be';ctx.lineWidth=1.2;ctx.strokeRect(x,y,w,h);
+     ctx.fillStyle=opts.color||'#17323a';
+     ctx.font=(opts.bold?'700 ':'400 ')+(opts.fontSize||19)+'px Tahoma, Arial, sans-serif';
+     ctx.direction='rtl';ctx.textAlign='center';ctx.textBaseline='middle';
+     const lines=wrapText(ctx,text,w-18,opts.maxLines||2);
+     const lineH=(opts.fontSize||19)*1.38;
+     const total=(lines.length-1)*lineH;
+     lines.forEach((line,i)=>ctx.fillText(line,x+w/2,y+h/2-total/2+i*lineH,w-16));
+   }
+
+   async function canvasToJpegBytes(canvas){
+     const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('JPEG export failed')),'image/jpeg',0.92));
+     return new Uint8Array(await blob.arrayBuffer());
+   }
+
+   const jpegPages=[];
+   for(let p=0;p<pages.length;p++){
+     const canvas=document.createElement('canvas');canvas.width=PAGE_W;canvas.height=PAGE_H;
+     const ctx=canvas.getContext('2d');
+     ctx.fillStyle='#ffffff';ctx.fillRect(0,0,PAGE_W,PAGE_H);
+     ctx.direction='rtl';ctx.textAlign='center';ctx.textBaseline='middle';
+
+     // Header
+     ctx.fillStyle='#0b5368';ctx.font='700 36px Tahoma, Arial, sans-serif';
+     ctx.fillText('وزارة النقل والاتصالات وتقنية المعلومات',PAGE_W/2,62);
+     ctx.fillStyle='#17323a';ctx.font='700 29px Tahoma, Arial, sans-serif';
+     ctx.fillText('دائرة الطرق بمحافظة الداخلية - كشف الزوار',PAGE_W/2,112);
+     ctx.strokeStyle='#0b6478';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(95,150);ctx.lineTo(PAGE_W-95,150);ctx.stroke();
+
+     ctx.font='20px Tahoma, Arial, sans-serif';ctx.fillStyle='#586f78';
+     ctx.fillText(period,PAGE_W/2,184);
+     ctx.textAlign='right';ctx.fillText('عدد الزيارات: '+rows.length,PAGE_W-96,218);
+     ctx.textAlign='left';ctx.fillText('تاريخ الإصدار: '+generated,96,218);
+     ctx.textAlign='center';ctx.fillText('صفحة '+(p+1)+' من '+pages.length,PAGE_W/2,218);
+
+     const tableX=65, tableY=252, tableW=PAGE_W-130;
+     const widths=[0.05,0.16,0.11,0.17,0.24,0.10,0.09,0.08].map(v=>v*tableW);
+     const headers=['م','اسم الزائر','الهاتف','القسم','الغرض من الزيارة','التاريخ','الوقت','الحالة'];
+     const headH=66,rowH=78;
+     let x=tableX;
+     for(let i=0;i<headers.length;i++){drawCell(ctx,headers[i],x,tableY,widths[i],headH,{bg:'#e7f2f5',bold:true,fontSize:20,maxLines:2});x+=widths[i];}
+
+     pages[p].forEach((v,idx)=>{
+       const vals=[p*rowsPerPage+idx+1,v.name||'غير مسجل',v.phone||'',v.dept||'',v.purpose||'',formatDateForDisplay(v.date),formatTimeForDisplay(v.time),v.status||''];
+       let cx=tableX, cy=tableY+headH+idx*rowH;
+       vals.forEach((val,i)=>{drawCell(ctx,val,cx,cy,widths[i],rowH,{bold:i===1,fontSize:i===4?17:18,maxLines:i===4?3:2});cx+=widths[i];});
+     });
+
+     // Footer
+     ctx.strokeStyle='#cbd9dd';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(95,PAGE_H-78);ctx.lineTo(PAGE_W-95,PAGE_H-78);ctx.stroke();
+     ctx.fillStyle='#60757c';ctx.font='18px Tahoma, Arial, sans-serif';ctx.textAlign='center';
+     ctx.fillText('جميع الحقوق محفوظة لوزارة النقل والاتصالات وتقنية المعلومات - دائرة الطرق بمحافظة الداخلية 2026',PAGE_W/2,PAGE_H-42);
+     jpegPages.push({bytes:await canvasToJpegBytes(canvas),width:PAGE_W,height:PAGE_H});
+   }
+
+   function buildPdf(images){
+     const enc=new TextEncoder();
+     const chunks=[];const offsets=[];let pos=0;
+     const pushText=t=>{const b=enc.encode(t);chunks.push(b);pos+=b.length;};
+     const pushBytes=b=>{chunks.push(b);pos+=b.length;};
+     const objCount=2+images.length*3;
+     pushText('%PDF-1.4\n');
+     const startObj=n=>{offsets[n]=pos;pushText(n+' 0 obj\n');};
+     startObj(1);pushText('<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+     const kids=images.map((_,i)=>(3+i*3)+' 0 R').join(' ');
+     startObj(2);pushText('<< /Type /Pages /Kids ['+kids+'] /Count '+images.length+' >>\nendobj\n');
+     images.forEach((img,i)=>{
+       const pageObj=3+i*3, imageObj=pageObj+1, contentObj=pageObj+2;
+       startObj(pageObj);
+       pushText('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 841.89 595.28] /Resources << /XObject << /Im0 '+imageObj+' 0 R >> >> /Contents '+contentObj+' 0 R >>\nendobj\n');
+       startObj(imageObj);
+       pushText('<< /Type /XObject /Subtype /Image /Width '+img.width+' /Height '+img.height+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+img.bytes.length+' >>\nstream\n');
+       pushBytes(img.bytes);pushText('\nendstream\nendobj\n');
+       const content='q\n841.89 0 0 595.28 0 0 cm\n/Im0 Do\nQ\n';
+       startObj(contentObj);pushText('<< /Length '+enc.encode(content).length+' >>\nstream\n'+content+'endstream\nendobj\n');
+     });
+     const xref=pos;
+     pushText('xref\n0 '+(objCount+1)+'\n0000000000 65535 f \n');
+     for(let i=1;i<=objCount;i++) pushText(String(offsets[i]).padStart(10,'0')+' 00000 n \n');
+     pushText('trailer\n<< /Size '+(objCount+1)+' /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF');
+     return new Blob(chunks,{type:'application/pdf'});
+   }
+
+   const pdfBlob=buildPdf(jpegPages);
+   const from=document.getElementById('reportFrom')?.value||'';
+   const to=document.getElementById('reportTo')?.value||'';
+   let suffix='';if(from||to) suffix='_'+(from||'البداية')+'_إلى_'+(to||'النهاية');
+   const url=URL.createObjectURL(pdfBlob);
+   const a=document.createElement('a');a.href=url;a.download='كشف_الزوار'+suffix+'.pdf';document.body.appendChild(a);a.click();a.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),5000);
+   showToast('تم حفظ ملف PDF بنجاح.','success');
+ }catch(err){
+   console.error('PDF generation error:',err);
+   alert('تعذر إنشاء ملف PDF على هذا المتصفح. يمكنك استخدام زر «طباعة» ثم اختيار «حفظ كملف PDF».');
+ }finally{
+   if(btn){btn.disabled=false;btn.textContent=oldText||'حفظ PDF';}
+ }
+}
+
 function csv(){let rows=[['رقم الزائر','الزائر','القسم','الغرض من الزيارة','التاريخ','الوقت','الحالة'],...getReportData().map((v,i)=>[v.visitorNo || (i+1),v.name,v.dept,v.purpose,v.date,v.time,v.status])];let s='\uFEFF'+rows.map(r=>r.map(x=>'"'+String(x||'').replaceAll('"','""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'text/csv'}));a.download='سجل_زوار.csv';a.click()}
 function buildVisitorReportText(){
  const rows=getReportData();
