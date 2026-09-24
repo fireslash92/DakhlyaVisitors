@@ -32,8 +32,42 @@ table{background:white;border-radius:12px;overflow:hidden}th{background:#edf5f7;
 @media(max-width:520px){#deps{grid-template-columns:1fr}.tabs button{min-width:100%}}
 
 .ministry-logo{width:min(250px,24vw)!important;max-height:68px!important}@media(max-width:800px){.ministry-logo{width:min(220px,64vw)!important;max-height:58px!important}}
+
+
+/* ===== تسجيل الدخول Firebase Authentication ===== */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:
+radial-gradient(circle at 15% 20%,rgba(216,173,85,.18),transparent 28%),
+linear-gradient(135deg,#063e50 0%,#075d73 48%,#0b7890 100%)}
+.login-card{width:min(430px,100%);background:rgba(255,255,255,.98);border-radius:22px;padding:30px;box-shadow:0 24px 65px #002f3f66;border:1px solid #ffffff70}
+.login-brand{text-align:center;margin-bottom:25px}.login-brand .login-icon{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;font-size:34px;box-shadow:0 10px 24px #075d7340}.login-brand h1{font-size:23px;margin:0 0 8px;color:#0b5368}.login-brand p{margin:0;color:#647b84;font-size:14px;line-height:1.8}
+.login-card label{font-size:14px;margin-top:14px}.login-card input{font-size:16px;padding:13px 14px}.login-card button{width:100%;margin-top:20px;padding:13px;font-size:16px;background:linear-gradient(135deg,var(--teal),var(--teal2));border-radius:11px}.login-card button:disabled{opacity:.65;cursor:not-allowed}.login-error{display:none;margin-top:15px;padding:10px 12px;background:#fff1f0;border:1px solid #f0c4bf;color:#9b302a;border-radius:9px;font-size:13px;line-height:1.7}.login-note{margin-top:17px;text-align:center;color:#78909a;font-size:12px;line-height:1.7}
+#appShell{display:none}.user-bar{max-width:1180px;margin:0 auto;padding:10px 18px 0;display:flex;justify-content:flex-start;align-items:center;gap:9px;color:#fff;position:relative;z-index:5}.user-chip{display:inline-flex;align-items:center;gap:8px;background:#ffffff1a;border:1px solid #ffffff38;border-radius:999px;padding:7px 11px;font-size:13px;backdrop-filter:blur(8px)}.logout-btn{padding:7px 12px;background:#ffffff;color:#075d73;border-radius:999px;box-shadow:none;font-size:12px}.logout-btn:hover{background:#edf6f7}
+@media(max-width:520px){.login-card{padding:24px 18px}.login-brand h1{font-size:20px}.user-bar{justify-content:center;flex-wrap:wrap}}
+
 </style></head><body>
-<header><div class="header-wrap"><div class="header-title"><h2>نظام إدارة زوار دائرة الطرق بمحافظة الداخلية</h2><div id="clock"></div></div></div></header>
+<section id="loginScreen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-icon">👤</div>
+      <h1>نظام إدارة زوار دائرة الطرق</h1>
+      <p>دائرة الطرق بمحافظة الداخلية<br>يرجى تسجيل الدخول للمتابعة</p>
+    </div>
+    <form id="loginForm">
+      <label for="loginUsername">اسم المستخدم</label>
+      <input id="loginUsername" type="text" autocomplete="username" required placeholder="مثال: admin">
+      <label for="loginPassword">كلمة المرور</label>
+      <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="أدخل كلمة المرور">
+      <button id="loginBtn" type="submit">تسجيل الدخول</button>
+      <div id="loginError" class="login-error"></div>
+    </form>
+    <div class="login-note">الدخول متاح فقط للمستخدمين المسجلين في Firebase Authentication.</div>
+  </div>
+</section>
+<div id="appShell">
+<header>
+  <div class="user-bar no-print"><span class="user-chip">👤 <span id="currentUsername"></span></span><button type="button" class="logout-btn" onclick="logoutUser()">تسجيل الخروج</button></div>
+  <div class="header-wrap"><div class="header-title"><h2>نظام إدارة زوار دائرة الطرق بمحافظة الداخلية</h2><div id="clock"></div></div></div>
+</header>
 <main>
 <div class="tabs no-print"><button type="button" onclick="tab('home')">الرئيسية</button><button type="button" onclick="tab('add')">تسجيل زائر</button><button type="button" onclick="tab('list')">سجل الزيارات</button><button type="button" onclick="tab('report')">التقارير</button></div>
 
@@ -77,15 +111,17 @@ table{background:white;border-radius:12px;overflow:hidden}th{background:#edf5f7;
 </div>
 <div id="rep"></div></div></section>
 </main>
+</div>
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
 <script>
 /* =========================================================
-   Firebase - المرحلة الأولى
-   1) أنشئ مشروع Firebase
-   2) فعّل Cloud Firestore
-   3) من Project settings > Your apps > Web app انسخ firebaseConfig
-   4) استبدل القيم أدناه بقيم مشروعك
+   Firebase + Authentication
+   - Cloud Firestore لحفظ بيانات الزوار
+   - Firebase Authentication لتسجيل الدخول
+   - اسم المستخدم "admin" يقابل داخليًا:
+     admin@visitors-4450c.firebaseapp.com
    ========================================================= */
 const firebaseConfig = {
   apiKey: "AIzaSyDVTnL6NB3IIg7d-GfIq-2jfHc60e36FAk",
@@ -98,70 +134,159 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 const db = firebase.firestore();
 const visitsRef = db.collection('visits');
-const counterRef = db.collection('system').doc('visitorCounter');
 let data=[];
+let visitsUnsubscribe=null;
 const departments=['قسم الصيانة','قسم الشؤون الإدارية والمالية','قسم التنسيق والمتابعة','قسم البريد والوثائق'];
+const USERNAME_DOMAIN='visitors-4450c.firebaseapp.com';
 
-// مزامنة فورية: أي تعديل من جهاز آخر يظهر هنا مباشرة.
-visitsRef.onSnapshot((snapshot)=>{
-  data=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
-  data.sort((a,b)=>{
-    const av=Number(a.visitorNo)||0, bv=Number(b.visitorNo)||0;
-    if(av!==bv) return bv-av;
-    return String((b.date||'')+' '+(b.time||'')).localeCompare(String((a.date||'')+' '+(a.time||'')));
+function usernameToEmail(username){
+  const value=String(username||'').trim().toLowerCase();
+  if(value.includes('@')) return value;
+  return value+'@'+USERNAME_DOMAIN;
+}
+
+function readableAuthError(err){
+  const code=(err&&err.code)||'';
+  if(code==='auth/invalid-credential' || code==='auth/wrong-password' || code==='auth/user-not-found') return 'اسم المستخدم أو كلمة المرور غير صحيحة.';
+  if(code==='auth/too-many-requests') return 'تم إيقاف محاولات الدخول مؤقتًا بسبب كثرة المحاولات. حاول لاحقًا.';
+  if(code==='auth/network-request-failed') return 'تعذر الاتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.';
+  if(code==='auth/user-disabled') return 'هذا المستخدم موقوف. راجع مسؤول النظام.';
+  if(code==='auth/operation-not-allowed') return 'يجب تفعيل Email/Password من Firebase Authentication أولًا.';
+  return 'تعذر تسجيل الدخول. تحقق من اسم المستخدم وكلمة المرور وإعدادات Firebase.';
+}
+
+function startVisitsSync(){
+  if(visitsUnsubscribe) return;
+  visitsUnsubscribe=visitsRef.onSnapshot((snapshot)=>{
+    data=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
+    data.sort((a,b)=>{
+      const av=Number(a.visitorNo)||0, bv=Number(b.visitorNo)||0;
+      if(av!==bv) return bv-av;
+      return String((b.date||'')+' '+(b.time||'')).localeCompare(String((a.date||'')+' '+(a.time||'')));
+    });
+    dash();
+    render();
+    report();
+  },(err)=>{
+    console.error('Firestore read error:',err);
+    const m=document.getElementById('msg');
+    if(m){m.className='notice';m.textContent='تعذر قراءة بيانات Firebase. تحقق من قواعد Firestore وصلاحية المستخدم.';}
   });
-  dash();
-  render();
-  report();
-},(err)=>{
-  console.error('Firestore read error:',err);
-  const m=document.getElementById('msg');
-  if(m){m.className='notice';m.textContent='تعذر الاتصال بقاعدة Firebase. تحقق من إعدادات Firebase وقواعد Firestore.';}
+}
+
+function stopVisitsSync(){
+  if(visitsUnsubscribe){visitsUnsubscribe();visitsUnsubscribe=null;}
+  data=[];
+}
+
+async function logoutUser(){
+  try{await auth.signOut();}
+  catch(e){console.error('Logout error:',e);alert('تعذر تسجيل الخروج. حاول مرة أخرى.');}
+}
+
+const loginForm=document.getElementById('loginForm');
+loginForm.addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const username=document.getElementById('loginUsername').value.trim();
+  const password=document.getElementById('loginPassword').value;
+  const errorBox=document.getElementById('loginError');
+  const button=document.getElementById('loginBtn');
+  errorBox.style.display='none';
+  errorBox.textContent='';
+  if(!username || !password){errorBox.textContent='أدخل اسم المستخدم وكلمة المرور.';errorBox.style.display='block';return;}
+  button.disabled=true;
+  button.textContent='جارٍ تسجيل الدخول...';
+  try{
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    await auth.signInWithEmailAndPassword(usernameToEmail(username),password);
+    document.getElementById('loginPassword').value='';
+  }catch(err){
+    console.error('Login error:',err);
+    errorBox.textContent=readableAuthError(err);
+    errorBox.style.display='block';
+  }finally{
+    button.disabled=false;
+    button.textContent='تسجيل الدخول';
+  }
+});
+
+auth.onAuthStateChanged((user)=>{
+  const loginScreen=document.getElementById('loginScreen');
+  const appShell=document.getElementById('appShell');
+  const currentUsername=document.getElementById('currentUsername');
+  if(user){
+    loginScreen.style.display='none';
+    appShell.style.display='block';
+    const email=user.email||'';
+    currentUsername.textContent=email ? email.split('@')[0] : 'مستخدم';
+    startVisitsSync();
+    tab('home');
+  }else{
+    stopVisitsSync();
+    appShell.style.display='none';
+    loginScreen.style.display='flex';
+    currentUsername.textContent='';
+    setTimeout(()=>document.getElementById('loginUsername')?.focus(),0);
+  }
 });
 function tab(x){['home','add','list','report'].forEach(i=>document.getElementById(i).classList.toggle('hide',i!==x));if(x==='home')dash();if(x==='list')render();if(x==='report')report()}
 function uid(){return 'V-'+Date.now()+'-'+Math.floor(Math.random()*900+100)}
 function nextVisitorNo(){return data.reduce((m,v)=>Math.max(m,Number(v.visitorNo)||0),0)+1}
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 document.getElementById('date').value=new Date().toISOString().slice(0,10);
+function firestoreErrorMessage(err){
+  const code=(err&&err.code)||'';
+  if(code==='permission-denied') return 'رفض Firebase عملية الحفظ بسبب الصلاحيات. تأكد من قواعد Firestore وأن المستخدم مسجل الدخول.';
+  if(code==='unauthenticated') return 'انتهت جلسة تسجيل الدخول. سجل الدخول مرة أخرى ثم حاول الحفظ.';
+  if(code==='unavailable') return 'خدمة Firebase غير متاحة مؤقتًا أو لا يوجد اتصال بالإنترنت.';
+  if(code==='failed-precondition') return 'قاعدة Firestore غير جاهزة للعملية الحالية. تحقق من إنشاء قاعدة البيانات وإعداداتها.';
+  if(code==='not-found') return 'تعذر العثور على قاعدة البيانات أو المستند المطلوب.';
+  return 'تعذر الحفظ في Firebase'+(code ? ' ('+code+')' : '')+'. راجع إعدادات Firestore.';
+}
+
 async function saveVisit(){
   const get=id=>document.getElementById(id);
   const editingId=window.editingVisitId;
+  const saveBtn=get('saveVisitBtn');
+
+  if(!auth.currentUser){
+    get('msg').className='notice';
+    get('msg').textContent='يجب تسجيل الدخول قبل حفظ الزيارة.';
+    return;
+  }
+
   const payload={
     name:(get('name').value||'').trim() || 'غير مسجل',
     phone:(get('phone').value||'').trim(),
     dept:get('dept').value || 'غير محدد',
     date:get('date').value || new Date().toISOString().slice(0,10),
     time:get('time').value || new Date().toTimeString().slice(0,5),
-    purpose:(get('purpose').value||'').trim()
+    purpose:(get('purpose').value||'').trim(),
+    updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+    updatedBy:auth.currentUser.uid
   };
 
   try {
+    if(saveBtn){saveBtn.disabled=true;saveBtn.textContent='جارٍ الحفظ...';}
     let visitorNo;
-    if(editingId){
-      await visitsRef.doc(editingId).update(payload);
-      const old=data.find(x=>x.id===editingId);
-      visitorNo=old?.visitorNo;
-    }else{
-      const newVisitRef=visitsRef.doc();
-      await db.runTransaction(async(tx)=>{
-        const counterSnap=await tx.get(counterRef);
-        const last=counterSnap.exists ? Number(counterSnap.data().lastNumber||0) : 0;
-        visitorNo=last+1;
-        tx.set(counterRef,{lastNumber:visitorNo},{merge:true});
-        tx.set(newVisitRef,{
-          ...payload,
-          visitorNo,
-          status:'مجدولة',
-          createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-          updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-        });
-      });
-    }
 
     if(editingId){
-      await visitsRef.doc(editingId).set({updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+      const old=data.find(x=>x.id===editingId);
+      visitorNo=old?.visitorNo;
+      await visitsRef.doc(editingId).update(payload);
+    }else{
+      visitorNo=nextVisitorNo();
+      const newVisitRef=visitsRef.doc();
+      await newVisitRef.set({
+        ...payload,
+        visitorNo,
+        status:'مجدولة',
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+        createdBy:auth.currentUser.uid
+      });
     }
 
     get('form').reset();
@@ -169,11 +294,12 @@ async function saveVisit(){
     get('msg').className='notice';
     get('msg').textContent=editingId ? 'تم حفظ تعديل الزيارة في Firebase بنجاح.' : 'تم حفظ الزيارة في Firebase بنجاح. رقم الزائر: '+visitorNo;
     window.editingVisitId=null;
-    const b=get('saveVisitBtn'); if(b) b.textContent='حفظ الزيارة';
   } catch(err){
-    console.error(err);
+    console.error('Firestore save error:',err);
     get('msg').className='notice';
-    get('msg').textContent='تعذر الحفظ في Firebase. تحقق من الاتصال وإعدادات Firestore.';
+    get('msg').textContent=firestoreErrorMessage(err);
+  } finally {
+    if(saveBtn){saveBtn.disabled=false;saveBtn.textContent=window.editingVisitId?'حفظ التعديل':'حفظ الزيارة';}
   }
 }
 document.getElementById('form').addEventListener('submit',function(e){e.preventDefault();saveVisit();});
