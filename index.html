@@ -1,0 +1,385 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>نظام زوار دائرة الطرق بمحافظة الداخلية</title>
+<style>
+body{font-family:Tahoma,Arial;margin:0;background:#f3f6f7;color:#17323a}header{background:#0f4c5c;color:white;padding:20px}main{max-width:1100px;margin:20px auto;padding:10px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}button{background:#0f4c5c;color:white;border:0;border-radius:7px;padding:10px 15px;cursor:pointer}button.green{background:#287b4b}button.red{background:#a33d3d}.card{background:white;border-radius:12px;padding:18px;margin-bottom:15px;box-shadow:0 2px 12px #0001}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:#eaf2f4;padding:15px;border-radius:10px}.stat b{display:block;font-size:26px;margin-top:7px}input,select,textarea{width:100%;padding:10px;border:1px solid #ccd7da;border-radius:7px;box-sizing:border-box}label{font-size:13px;font-weight:bold}table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #ddd;text-align:right;font-size:13px}.hide{display:none}.badge{background:#e8f0f2;padding:4px 8px;border-radius:15px}.actions{display:flex;gap:5px;flex-wrap:wrap}.notice{padding:10px;background:#e6f5eb;border-radius:7px;margin:10px 0}@media(max-width:700px){.grid,.stats{grid-template-columns:1fr}}
+@media print{header,.tabs,.no-print{display:none}.card{box-shadow:none}}
+
+.header-wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;direction:ltr;width:100%}.header-title{grid-column:1;direction:rtl;text-align:right;min-width:0}.header-title h2{margin:0 0 8px;font-size:24px}.ministry-logo{grid-column:2;width:min(360px,38vw);max-height:82px;object-fit:contain;display:block;border:0;border-radius:0;background:transparent;box-shadow:none;justify-self:end}@media(max-width:700px){.header-wrap{grid-template-columns:minmax(0,1fr) auto;gap:12px}.ministry-logo{width:min(210px,42vw);max-height:62px}.header-title{text-align:right}.header-title h2{font-size:17px;line-height:1.5}}
+
+/* ===== واجهة حديثة - تعديلات شكلية فقط ===== */
+:root{--teal:#075d73;--teal2:#0b7890;--ink:#123846;--soft:#eef6f8;--gold:#d8ad55}
+body{background:linear-gradient(180deg,#eaf4f6 0,#f7fafb 360px,#f3f6f7 100%);color:var(--ink)}
+header{position:relative;overflow:hidden;padding:0;min-height:205px;background:
+linear-gradient(90deg,rgba(4,65,84,.96),rgba(4,87,107,.88)),
+linear-gradient(135deg,#0a6176,#073e54);border-bottom-left-radius:34px;box-shadow:0 8px 28px #0a4f641f}
+header:before{content:"";position:absolute;inset:0;opacity:.22;background-image:
+linear-gradient(150deg,transparent 0 44%,rgba(255,255,255,.18) 44.3% 44.7%,transparent 45% 100%),
+repeating-linear-gradient(90deg,transparent 0 120px,rgba(255,255,255,.08) 121px 123px,transparent 124px 240px);pointer-events:none}
+.header-wrap{position:relative;z-index:1;max-width:1180px;margin:auto;min-height:155px;padding:24px 28px;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:34px;direction:rtl}
+.ministry-logo{grid-column:1;width:min(330px,31vw);max-height:92px;object-fit:contain;justify-self:start;filter:drop-shadow(0 2px 3px #0002)}
+.header-title{grid-column:2;text-align:right;direction:rtl}.header-title h2{font-size:clamp(22px,2.2vw,34px);margin:0 0 12px;font-weight:800;text-shadow:0 2px 4px #0003}.header-title h2:before{content:"👤";display:inline-grid;place-items:center;width:54px;height:54px;margin-left:14px;border-radius:50%;background:#fff;color:var(--teal);font-size:29px;vertical-align:middle;box-shadow:0 7px 20px #002b3945}.header-title:after{content:"إدارة وتنظيم الزيارات بسهولة وأمان";display:block;font-size:14px;color:#d9eef2;margin-top:7px}.header-title #clock{margin-top:12px;font-size:14px;color:#fff;opacity:.92}
+main{max-width:1180px;margin:-38px auto 25px;padding:0 18px;position:relative;z-index:3}
+.tabs{justify-content:center;background:rgba(255,255,255,.97);padding:9px;border-radius:16px;box-shadow:0 8px 28px #174b5b20;margin:0 auto 20px;max-width:720px;border:1px solid #d9e7eb}.tabs button{min-width:145px;background:transparent;color:#17485a;font-weight:bold;border-radius:11px;padding:12px 18px;transition:.2s;border:1px solid transparent}.tabs button:hover{background:#eaf5f7;color:#075d73;transform:translateY(-1px)}.tabs button:first-child{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;box-shadow:0 5px 14px #075d7330}
+.card{border:1px solid #e0eaed;border-radius:17px;padding:21px;box-shadow:0 7px 22px #164b5912;background:rgba(255,255,255,.98)}
+.card h3{margin-top:0;color:#0b5368;font-size:20px;display:flex;align-items:center;gap:9px}.card h3:before{content:"";width:5px;height:24px;border-radius:8px;background:linear-gradient(var(--gold),#e8c77d)}
+.stats{gap:13px}.stat{position:relative;overflow:hidden;background:linear-gradient(145deg,#f7fbfc,#e8f4f6);border:1px solid #dbeaed;border-radius:15px;padding:18px;box-shadow:inset 0 1px #fff}.stat:nth-child(2){background:linear-gradient(145deg,#f1fbf6,#e2f4ea)}.stat:nth-child(3){background:linear-gradient(145deg,#f2f8ff,#e6f1fb)}.stat:nth-child(4){background:linear-gradient(145deg,#fffaf1,#f6eddc)}.stat b{color:#075d73;font-size:30px}
+#deps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}#deps .stat{text-align:center;font-weight:bold;min-height:52px;display:flex;align-items:center;justify-content:center}
+input,select,textarea{background:#fbfdfe;border:1px solid #cfdee3;border-radius:10px;padding:11px 12px;transition:.2s}input:focus,select:focus,textarea:focus{outline:none;border-color:#17839a;box-shadow:0 0 0 3px #17839a18;background:white}label{color:#244b59;margin-bottom:5px;display:block}
+button{font-weight:bold;box-shadow:0 3px 8px #0d4c5b18}#saveVisitBtn{width:100%;font-size:16px;padding:13px;background:linear-gradient(135deg,#08627a,#087e91);border-radius:11px}
+table{background:white;border-radius:12px;overflow:hidden}th{background:#edf5f7;color:#17495a;font-weight:700}th,td{padding:10px 8px}.badge{background:#e4f1f4;color:#0a6176;font-weight:bold}
+.notice{border-right:4px solid #2c8a57}
+@media(max-width:800px){header{min-height:235px}.header-wrap{grid-template-columns:1fr;gap:10px;text-align:center;padding:18px}.ministry-logo{grid-column:1;grid-row:1;width:min(300px,80vw);justify-self:center}.header-title{grid-column:1;grid-row:2;text-align:center}.header-title h2{font-size:21px}.header-title h2:before{width:43px;height:43px;font-size:23px}.header-title:after{font-size:12px}main{margin:-25px auto 20px}.tabs{max-width:none}.tabs button{min-width:calc(50% - 8px);flex:1}#deps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){#deps{grid-template-columns:1fr}.tabs button{min-width:100%}}
+
+.ministry-logo{width:min(250px,24vw)!important;max-height:68px!important}@media(max-width:800px){.ministry-logo{width:min(220px,64vw)!important;max-height:58px!important}}
+</style></head><body>
+<header><div class="header-wrap"><div class="header-title"><h2>نظام إدارة زوار دائرة الطرق بمحافظة الداخلية</h2><div id="clock"></div></div></div></header>
+<main>
+<div class="tabs no-print"><button type="button" onclick="tab('home')">الرئيسية</button><button type="button" onclick="tab('add')">تسجيل زائر</button><button type="button" onclick="tab('list')">سجل الزيارات</button><button type="button" onclick="tab('report')">التقارير</button></div>
+
+<section id="home"><div class="card system-proposal"><h3>نظام مقترح للتطبيق</h3><ul style="line-height:2;margin:0;padding-right:24px"><li>تسجيل الزائر من الاستقبال مع إمكانية إتاحه تسجيل ذاتي عبر الجهاز اللوحي في النسخه المطوره.</li><li>اختيار القسم المراد زيارته والغرض من الزيارة.</li><li>رقم زيارة تلقائي مع إمكانية المشاركة وطباعة بطاقة زائر .</li><li>تسجيل وقت الدخول والخروج وحالة الزيارة.</li><li>بحث وتصفية وتقارير يومية وشهرية وسنوية.</li></ul><p style="margin:14px 0 0;line-height:1.9;color:#526b74">هذه النسخة مرتبطة بقاعدة بيانات Firebase Cloud Firestore، وتظهر البيانات نفسها للأجهزة المتصلة بالنظام.</p></div><div class="stats"><div class="stat">إجمالي الزيارات<b id="total">0</b></div><div class="stat">داخل الدائرة<b id="inside">0</b></div><div class="stat">زيارات اليوم<b id="today">0</b></div><div class="stat">منتهية<b id="done">0</b></div></div>
+<div class="card"><h3>أقسام الدائرة</h3><div id="deps"></div></div></section>
+
+<section id="add" class="hide"><div class="card"><h3>تسجيل زائر جديد</h3><div id="msg"></div>
+<form id="form"><div class="grid">
+<div><label>اسم الزائر الثلاثي *</label><input id="name" maxlength="100" placeholder="اكتب الاسم الثلاثي كاملًا"></div>
+<div><label>الهاتف</label><input id="phone"></div>
+<div><label>القسم *</label><select id="dept"><option value="">اختر القسم</option><option>قسم الصيانة</option><option>قسم الشؤون الإدارية والمالية</option><option>قسم التنسيق والمتابعة</option><option>قسم البريد والوثائق</option></select></div>
+
+<div style="grid-column:1/-1"><label>الغرض من الزيارة</label><textarea id="purpose" placeholder="اكتب الغرض من الزيارة"></textarea></div>
+<div><label>التاريخ</label><input id="date" type="date"></div><div><label>الوقت</label><input id="time" type="time"></div>
+</div><br><button type="button" id="saveVisitBtn" onclick="saveVisit()">حفظ الزيارة</button></form></div></section>
+
+<section id="list" class="hide"><div class="card"><h3>سجل الزيارات</h3><div class="actions no-print"><input id="q" placeholder="بحث بالاسم أو رقم الزائر أو الهاتف" oninput="render()"><select id="fd" onchange="render()"><option value="">كل الأقسام</option><option>قسم الصيانة</option><option>قسم الشؤون الإدارية والمالية</option><option>قسم التنسيق والمتابعة</option><option>قسم البريد والوثائق</option></select><button type="button" onclick="window.print()">طباعة / PDF</button><button type="button" onclick="csv()">Excel</button></div><div style="margin:12px 0;text-align:left;">
+<div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start;align-items:center;">
+<button type="button" onclick="toggleDeleteMode(true); return false;" style="background:#b7791f">حذف وتعديل</button>
+</div>
+<div id="deleteTools" class="no-print" style="display:none;margin-top:10px;padding:12px;background:#fff3f2;border:1px solid #f0c7c3;border-radius:8px;text-align:right;">
+<div style="font-weight:bold;margin-bottom:10px">حدد الزيارة المطلوبة، ثم اختار الإجراء:</div>
+<label style="display:inline-flex;align-items:center;gap:6px;margin:0 10px"><input type="checkbox" id="selectAllVisits" onchange="selectAllVisits(this.checked)" style="width:auto"> تحديد الكل</label>
+<button type="button" onclick="editSelectedVisit(); return false;" style="background:#b7791f">تعديل المحدد</button>
+<button type="button" onclick="deleteSelectedVisits(); return false;" class="red">حذف المحدد</button>
+<button type="button" onclick="toggleDeleteMode(false); return false;" style="background:#68777c">إلغاء التحديد</button>
+</div>
+</div>
+<div id="table"></div></div></section>
+
+<section id="report" class="hide"><div class="card"><h3>كشف الزوار</h3>
+<div class="no-print" style="margin-bottom:12px;display:flex;gap:10px;align-items:end;flex-wrap:wrap">
+<label style="margin:0">من تاريخ<input type="date" id="reportFrom" onchange="report()" style="margin-top:5px"></label>
+<label style="margin:0">إلى تاريخ<input type="date" id="reportTo" onchange="report()" style="margin-top:5px"></label>
+<button type="button" onclick="clearReportDates()" style="background:#68777c">إظهار الكل</button>
+</div>
+<div class="actions no-print" style="margin-bottom:10px">
+<button type="button" onclick="printVisitorList()">طباعة</button>
+<button type="button" onclick="shareVisitorReport()">مشاركة</button>
+<button type="button" onclick="csv()">حفظ</button>
+</div>
+<div id="rep"></div></div></section>
+</main>
+<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+<script>
+/* =========================================================
+   Firebase - المرحلة الأولى
+   1) أنشئ مشروع Firebase
+   2) فعّل Cloud Firestore
+   3) من Project settings > Your apps > Web app انسخ firebaseConfig
+   4) استبدل القيم أدناه بقيم مشروعك
+   ========================================================= */
+const firebaseConfig = {
+  apiKey: "ضع_API_KEY_هنا",
+  authDomain: "ضع_AUTH_DOMAIN_هنا",
+  projectId: "ضع_PROJECT_ID_هنا",
+  storageBucket: "ضع_STORAGE_BUCKET_هنا",
+  messagingSenderId: "ضع_MESSAGING_SENDER_ID_هنا",
+  appId: "ضع_APP_ID_هنا"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const visitsRef = db.collection('visits');
+const counterRef = db.collection('system').doc('visitorCounter');
+let data=[];
+const departments=['قسم الصيانة','قسم الشؤون الإدارية والمالية','قسم التنسيق والمتابعة','قسم البريد والوثائق'];
+
+// مزامنة فورية: أي تعديل من جهاز آخر يظهر هنا مباشرة.
+visitsRef.onSnapshot((snapshot)=>{
+  data=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
+  data.sort((a,b)=>{
+    const av=Number(a.visitorNo)||0, bv=Number(b.visitorNo)||0;
+    if(av!==bv) return bv-av;
+    return String((b.date||'')+' '+(b.time||'')).localeCompare(String((a.date||'')+' '+(a.time||'')));
+  });
+  dash();
+  render();
+  report();
+},(err)=>{
+  console.error('Firestore read error:',err);
+  const m=document.getElementById('msg');
+  if(m){m.className='notice';m.textContent='تعذر الاتصال بقاعدة Firebase. تحقق من إعدادات Firebase وقواعد Firestore.';}
+});
+function tab(x){['home','add','list','report'].forEach(i=>document.getElementById(i).classList.toggle('hide',i!==x));if(x==='home')dash();if(x==='list')render();if(x==='report')report()}
+function uid(){return 'V-'+Date.now()+'-'+Math.floor(Math.random()*900+100)}
+function nextVisitorNo(){return data.reduce((m,v)=>Math.max(m,Number(v.visitorNo)||0),0)+1}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+document.getElementById('date').value=new Date().toISOString().slice(0,10);
+async function saveVisit(){
+  const get=id=>document.getElementById(id);
+  const editingId=window.editingVisitId;
+  const payload={
+    name:(get('name').value||'').trim() || 'غير مسجل',
+    phone:(get('phone').value||'').trim(),
+    dept:get('dept').value || 'غير محدد',
+    date:get('date').value || new Date().toISOString().slice(0,10),
+    time:get('time').value || new Date().toTimeString().slice(0,5),
+    purpose:(get('purpose').value||'').trim()
+  };
+
+  try {
+    let visitorNo;
+    if(editingId){
+      await visitsRef.doc(editingId).update(payload);
+      const old=data.find(x=>x.id===editingId);
+      visitorNo=old?.visitorNo;
+    }else{
+      const newVisitRef=visitsRef.doc();
+      await db.runTransaction(async(tx)=>{
+        const counterSnap=await tx.get(counterRef);
+        const last=counterSnap.exists ? Number(counterSnap.data().lastNumber||0) : 0;
+        visitorNo=last+1;
+        tx.set(counterRef,{lastNumber:visitorNo},{merge:true});
+        tx.set(newVisitRef,{
+          ...payload,
+          visitorNo,
+          status:'مجدولة',
+          createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+        });
+      });
+    }
+
+    if(editingId){
+      await visitsRef.doc(editingId).set({updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+    }
+
+    get('form').reset();
+    get('date').value=new Date().toISOString().slice(0,10);
+    get('msg').className='notice';
+    get('msg').textContent=editingId ? 'تم حفظ تعديل الزيارة في Firebase بنجاح.' : 'تم حفظ الزيارة في Firebase بنجاح. رقم الزائر: '+visitorNo;
+    window.editingVisitId=null;
+    const b=get('saveVisitBtn'); if(b) b.textContent='حفظ الزيارة';
+  } catch(err){
+    console.error(err);
+    get('msg').className='notice';
+    get('msg').textContent='تعذر الحفظ في Firebase. تحقق من الاتصال وإعدادات Firestore.';
+  }
+}
+document.getElementById('form').addEventListener('submit',function(e){e.preventDefault();saveVisit();});
+function msg(t){document.getElementById('msg').className='notice';document.getElementById('msg').textContent=t}
+function dash(){total.textContent=data.length;inside.textContent=data.filter(v=>v.status==='داخل الدائرة').length;today.textContent=data.filter(v=>v.date===new Date().toISOString().slice(0,10)).length;done.textContent=data.filter(v=>v.status==='منتهية').length;deps.innerHTML=departments.map(d=>'<div class="stat">'+d+' : '+data.filter(v=>v.dept===d).length+' زيارة</div>').join('')}
+function render(){
+ let q=(document.getElementById('q').value||'').toLowerCase();
+ let d=fd.value;
+ let a=data.filter(v=>
+   (!q || ((v.name||'')+' '+(v.visitorNo||'')+' '+(v.id||'')+' '+(v.phone||'')).toLowerCase().includes(q)) &&
+   (!d || v.dept===d)
+ );
+ let deleteMode=document.getElementById('deleteTools') && document.getElementById('deleteTools').style.display!=='none';
+ let rows=a.map((v,i)=>{
+   let action='';
+   if(v.status==='مجدولة') action='<button class="green" onclick="checkIn(\''+v.id+'\')">دخول</button>';
+   if(v.status==='داخل الدائرة') action='<button class="red" onclick="checkOut(\''+v.id+'\')">خروج</button>';
+   action+=' <button onclick="card(\''+v.id+'\')">بطاقة</button>';
+   let selectCell=deleteMode ? '<td class="no-print"><input type="checkbox" class="visitSelect" value="'+esc(v.id)+'" style="width:auto"></td>' : '';
+   return '<tr>'+
+     selectCell+
+     '<td>'+esc(v.visitorNo || (data.indexOf(v)+1))+'</td>'+
+     '<td><strong>'+esc(v.name)+'</strong></td>'+
+     '<td>'+esc(v.dept)+'</td>'+
+     '<td>'+esc(v.date)+' '+esc(v.time)+'</td>'+
+     '<td><span class="badge">'+esc(v.status)+'</span></td>'+
+     '<td>'+action+'</td>'+
+   '</tr>';
+ }).join('');
+ let selectHead=deleteMode ? '<th class="no-print">تحديد</th>' : '';
+ document.getElementById('table').innerHTML=
+   '<table><thead><tr>'+selectHead+
+   '<th>رقم الزائر</th><th>اسم الزائر</th><th>القسم</th>'+
+   '<th>التاريخ والوقت</th><th>الحالة</th><th>إجراء</th>'+
+   '</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+function toggleDeleteMode(force){
+ const tools=document.getElementById('deleteTools');
+ const show=(typeof force==='boolean') ? force : tools.style.display==='none';
+ tools.style.display=show?'block':'none';
+ const all=document.getElementById('selectAllVisits'); if(all) all.checked=false;
+ render();
+}
+function selectAllVisits(checked){
+ document.querySelectorAll('.visitSelect').forEach(c=>c.checked=checked);
+}
+
+async function clearAllVisits(){
+  if(!data.length){alert('لا توجد زيارات مسجلة لمسحها.');return;}
+  const ok=window.confirm('هل أنت متأكد من مسح جميع بيانات سجل الزوار من Firebase؟\n\nلا يمكن التراجع عن هذه العملية.');
+  if(!ok)return;
+  try{
+    await Promise.all(data.map(v=>visitsRef.doc(v.id).delete()));
+    await counterRef.set({lastNumber:0},{merge:true});
+    const all=document.getElementById('selectAllVisits'); if(all) all.checked=false;
+    alert('تم مسح جميع بيانات سجل الزوار من Firebase بنجاح.');
+  }catch(err){
+    console.error(err);
+    alert('تعذر مسح البيانات من Firebase.');
+  }
+}
+
+function editSelectedVisit(){
+ const ids=[...document.querySelectorAll('.visitSelect:checked')].map(c=>c.value);
+ if(ids.length!==1){alert('يرجى تحديد زيارة واحدة فقط لتعديلها.');return;}
+ const v=data.find(x=>x.id===ids[0]);
+ if(!v)return;
+ document.getElementById('name').value=v.name||'';
+ document.getElementById('phone').value=v.phone||'';
+ document.getElementById('dept').value=v.dept||'';
+ document.getElementById('purpose').value=v.purpose||'';
+ document.getElementById('date').value=v.date||'';
+ document.getElementById('time').value=v.time||'';
+ window.editingVisitId=v.id;
+ const b=document.getElementById('saveVisitBtn'); if(b) b.textContent='حفظ التعديل';
+ tab('add');
+}
+async function deleteSelectedVisits(){
+  const ids=[...document.querySelectorAll('.visitSelect:checked')].map(c=>c.value);
+  if(!ids.length){alert('يرجى تحديد زيارة واحدة على الأقل للحذف.');return;}
+  const ok=window.confirm(ids.length===data.length ? 'تم تحديد جميع الزيارات. هل تريد حذفها بالكامل من Firebase؟' : 'هل أنت متأكد من حذف الزيارات المحددة وعددها '+ids.length+'؟');
+  if(!ok)return;
+  try{
+    await Promise.all(ids.map(id=>visitsRef.doc(id).delete()));
+    const all=document.getElementById('selectAllVisits'); if(all) all.checked=false;
+    alert('تم حذف الزيارات المحددة من Firebase بنجاح.');
+  }catch(err){
+    console.error(err);
+    alert('تعذر حذف الزيارات من Firebase.');
+  }
+}
+async function checkIn(x){
+  try{await visitsRef.doc(x).update({status:'داخل الدائرة',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});}
+  catch(err){console.error(err);alert('تعذر تسجيل الدخول في Firebase.');}
+}
+async function checkOut(x){
+  try{await visitsRef.doc(x).update({status:'منتهية',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});}
+  catch(err){console.error(err);alert('تعذر تسجيل الخروج في Firebase.');}
+}
+function card(x){showCard(data.find(v=>v.id===x))}
+function showCard(v){
+ if(!v){alert('تعذر العثور على بيانات الزائر.');return;}
+ const w=window.open('','_blank','width=500,height=600');
+ if(!w){alert('تعذر فتح بطاقة الزائر. يرجى السماح بالنوافذ المنبثقة لهذا الملف.');return;}
+ const cardHtml=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بطاقة زائر</title><style>body{font-family:Tahoma,Arial;text-align:center;padding:30px;color:#17323a}.card{border:2px solid #0f4c5c;padding:25px;border-radius:15px}.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px}.actions button{font-family:Tahoma,Arial;font-size:14px;padding:10px 18px;border:0;border-radius:8px;background:#0f6f73;color:#fff;cursor:pointer}@media print{.actions{display:none}}</style></head><body><div class="card"><h2>بطاقة زائر</h2><h3>دائرة الطرق بمحافظة الداخلية</h3><hr><p>رقم الزائر: <b>${esc(v.visitorNo || (data.indexOf(v)+1))}</b></p><p>الزائر: ${esc(v.name)}</p><p>القسم: ${esc(v.dept)}</p><p>الغرض من الزيارة: ${esc(v.purpose)}</p><p>التاريخ: ${esc(formatDateForDisplay(v.date))} ${esc(formatTimeForDisplay(v.time))}</p><p style="font-size:55px">▣</p><div class="actions"><button id="shareBtn" type="button">مشاركة</button><button id="saveBtn" type="button">حفظ</button><button id="printBtn" type="button">طباعة</button></div></div></body></html>`;
+ w.document.open(); w.document.write(cardHtml); w.document.close();
+ w.addEventListener('load',()=>{
+   const d=w.document;
+   d.getElementById('printBtn').addEventListener('click',()=>w.print());
+   d.getElementById('saveBtn').addEventListener('click',()=>{
+     const a=d.createElement('a');
+     const blob=new Blob([cardHtml],{type:'text/html;charset=utf-8'});
+     a.href=URL.createObjectURL(blob); a.download='بطاقة_زائر.html'; a.click();
+     setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+   });
+   d.getElementById('shareBtn').addEventListener('click',async()=>{
+     const text=`بطاقة زائر\nالزائر: ${v.name||''}\nالقسم: ${v.dept||''}\nالغرض من الزيارة: ${v.purpose||''}\nالتاريخ: ${formatDateForDisplay(v.date)} ${formatTimeForDisplay(v.time)}`;
+     try{if(w.navigator.share){await w.navigator.share({title:'بطاقة زائر',text});return;}}catch(e){if(e&&e.name==='AbortError')return;}
+     w.location.href='mailto:?subject='+encodeURIComponent('بطاقة زائر')+'&body='+encodeURIComponent(text);
+   });
+ });
+}
+function formatDateForDisplay(value){
+ if(!value) return '';
+ const p=String(value).split('-');
+ return p.length===3 ? p[2]+'/'+p[1]+'/'+p[0] : value;
+}
+function formatTimeForDisplay(value){
+ if(!value) return '';
+ const p=String(value).split(':');
+ let h=parseInt(p[0],10), m=p[1]||'00';
+ if(Number.isNaN(h)) return value;
+ const period=h>=12?'م':'ص';
+ h=h%12||12;
+ return h+':'+m+' '+period;
+}
+function getReportData(){
+ const from=document.getElementById('reportFrom')?.value||'';
+ const to=document.getElementById('reportTo')?.value||'';
+ return data.filter(v=>(!from||v.date>=from)&&(!to||v.date<=to));
+}
+function clearReportDates(){
+ const f=document.getElementById('reportFrom'), t=document.getElementById('reportTo');
+ if(f) f.value=''; if(t) t.value=''; report();
+}
+function report(){
+ const rows=getReportData();
+ rep.innerHTML='<table><tr><th>م</th><th>اسم الزائر</th><th>الهاتف</th><th>القسم</th><th>الغرض من الزيارة</th><th>التاريخ</th><th>الوقت</th><th>الحالة</th></tr>'+
+ rows.map((v,i)=>'<tr><td>'+(i+1)+'</td><td><b>'+esc((v.name || 'غير مسجل'))+'</b></td><td>'+esc(v.phone)+'</td><td>'+esc(v.dept)+'</td><td>'+esc(v.purpose)+'</td><td style="white-space:nowrap;text-align:center">'+esc(formatDateForDisplay(v.date))+'</td><td style="white-space:nowrap;text-align:center">'+esc(formatTimeForDisplay(v.time))+'</td><td>'+esc(v.status)+'</td></tr>').join('')+
+ '</table>';
+}
+function printVisitorList(){
+ const rows=getReportData();
+ const w=window.open('','_blank','width=1100,height=750');
+ if(!w){ alert('تعذر فتح نافذة كشف الزوار. يرجى السماح بالنوافذ المنبثقة لهذا الملف.'); return; }
+ const safeRows=JSON.stringify(rows).replace(/</g,'\\u003c');
+ const bodyRows=rows.map((v,i)=>'<tr><td>'+(i+1)+'</td><td class="name">'+esc(v.name)+'</td><td>'+esc(v.phone)+'</td><td>'+esc(v.dept)+'</td><td>'+esc(v.purpose)+'</td><td class="date">'+esc(formatDateForDisplay(v.date))+'</td><td class="time">'+esc(formatTimeForDisplay(v.time))+'</td><td>'+esc(v.status)+'</td></tr>').join('');
+ const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>كشف الزوار</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:Tahoma,Arial;padding:18px;color:#17323a}h2,h3{text-align:center;margin:6px 0}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #777;padding:8px 6px;text-align:center;font-size:11px}th{background:#eaf2f4}.name{font-weight:bold;text-align:right}.date,.time{white-space:nowrap}.share-print-actions{text-align:center;margin:18px 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.share-print-actions button{font-family:Tahoma,Arial;font-size:14px;padding:10px 18px;border:0;border-radius:8px;background:#0f6f73;color:#fff;cursor:pointer}@media print{.share-print-actions{display:none}}</style></head><body><div id="reportArea"><h2>دائرة الطرق بمحافظة الداخلية</h2><h3>كشف الزوار</h3><table><thead><tr><th>م</th><th>اسم الزائر</th><th>الهاتف</th><th>القسم</th><th>الغرض من الزيارة</th><th>التاريخ</th><th>الوقت</th><th>الحالة</th></tr></thead><tbody>${bodyRows}</tbody></table></div><div class="share-print-actions"><button type="button" onclick="window.print()">طباعة</button><button type="button" onclick="shareReportFile()">مشاركة</button><button type="button" onclick="saveReportFile()">حفظ</button></div><script>
+const REPORT_ROWS=${safeRows};
+function fmtDate(v){if(!v)return '';const p=String(v).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:v}
+function fmtTime(v){if(!v)return '';let p=String(v).split(':');let h=parseInt(p[0]||0),m=p[1]||'00',ap=h>=12?'م':'ص';h=h%12||12;return h+':'+m+' '+ap}
+function makeCanvas(){const rows=REPORT_ROWS,W=1600,titleH=150,rowH=58,headers=['م','اسم الزائر','الهاتف','القسم','الغرض من الزيارة','التاريخ','الوقت','الحالة'],widths=[70,260,170,260,330,160,150,145],H=titleH+rowH*(rows.length+1)+70,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,W,H);x.fillStyle='#17323a';x.textAlign='center';x.textBaseline='middle';x.direction='rtl';x.font='bold 32px Tahoma,Arial';x.fillText('دائرة الطرق بمحافظة الداخلية',W/2,45);x.font='bold 25px Tahoma,Arial';x.fillText('كشف الزوار',W/2,92);const tw=widths.reduce((a,b)=>a+b,0),sx=(W-tw)/2,sy=titleH;function cell(t,l,top,w,h,b,a){x.fillStyle=b?'#eaf2f4':'#fff';x.fillRect(l,top,w,h);x.strokeStyle='#777';x.strokeRect(l,top,w,h);x.fillStyle='#17323a';x.font=(b?'bold ':'')+'18px Tahoma,Arial';x.textAlign=a||'center';x.direction='rtl';t=String(t==null?'':t);if(t.length>32)t=t.slice(0,30)+'…';x.fillText(t,a==='right'?l+w-10:l+w/2,top+h/2,w-16)}let xx=sx;headers.forEach((h,i)=>{cell(h,xx,sy,widths[i],rowH,true);xx+=widths[i]});rows.forEach((v,r)=>{const vals=[r+1,v.name||'',v.phone||'',v.dept||'',v.purpose||'',fmtDate(v.date),fmtTime(v.time),v.status||''];let xx=sx;vals.forEach((val,i)=>{cell(val,xx,sy+rowH*(r+1),widths[i],rowH,false,i===1?'right':'center');xx+=widths[i]})});return c}
+function getReportImageBlob(){return new Promise(resolve=>{try{const c=makeCanvas();c.toBlob(blob=>resolve(blob||null),'image/png')}catch(e){resolve(null)}})}
+async function saveReportFile(){const blob=await getReportImageBlob();if(!blob){alert('تعذر تجهيز صورة الكشف');return}const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='كشف_الزوار.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+async function shareReportFile(){const blob=await getReportImageBlob();if(!blob){alert('تعذر تجهيز صورة الكشف');return}const file=new File([blob],'كشف_الزوار.png',{type:'image/png'});try{if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){await navigator.share({title:'كشف زوار دائرة الطرق بمحافظة الداخلية',text:'كشف زوار دائرة الطرق بمحافظة الداخلية',files:[file]});return}}catch(e){if(e&&e.name==='AbortError')return}alert('المشاركة المباشرة غير مدعومة في هذا المتصفح. اضغط «حفظ» لحفظ صورة الكشف ثم شاركها من الهاتف.');}
+<\/script></body></html>`;
+ w.document.open();w.document.write(html);w.document.close();
+}
+function csv(){let rows=[['رقم الزائر','الزائر','القسم','الغرض من الزيارة','التاريخ','الوقت','الحالة'],...getReportData().map((v,i)=>[v.visitorNo || (i+1),v.name,v.dept,v.purpose,v.date,v.time,v.status])];let s='\uFEFF'+rows.map(r=>r.map(x=>'"'+String(x||'').replaceAll('"','""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'text/csv'}));a.download='سجل_زوار.csv';a.click()}
+function buildVisitorReportText(){
+ const rows=getReportData();
+ const from=document.getElementById('reportFrom')?.value||'';
+ const to=document.getElementById('reportTo')?.value||'';
+ let period='';
+ if(from&&to) period='\nالفترة: من '+formatDateForDisplay(from)+' إلى '+formatDateForDisplay(to);
+ else if(from) period='\nمن تاريخ: '+formatDateForDisplay(from);
+ else if(to) period='\nحتى تاريخ: '+formatDateForDisplay(to);
+ let lines=['كشف زوار دائرة الطرق بمحافظة الداخلية'+period,'عدد الزيارات: '+rows.length,''];
+ rows.forEach((v,i)=>{
+   lines.push((i+1)+'. '+(v.name||'غير مسجل')+' | '+(v.dept||'')+' | '+formatDateForDisplay(v.date)+' | '+formatTimeForDisplay(v.time)+' | '+(v.purpose||''));
+ });
+ return lines.join('\n');
+}
+async function shareVisitorReport(){
+ const text=buildVisitorReportText();
+ const title='كشف زوار دائرة الطرق بمحافظة الداخلية';
+ if(navigator.share){
+   try{await navigator.share({title,text});return;}catch(e){if(e&&e.name==='AbortError')return;}
+ }
+ const choice=window.prompt('اختر طريقة المشاركة:\n1 - واتساب\n2 - البريد الإلكتروني','1');
+ if(choice==='1'){window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');}
+ else if(choice==='2'){window.location.href='mailto:?subject='+encodeURIComponent(title)+'&body='+encodeURIComponent(text);}
+}
+
+setInterval(()=>clock.textContent=new Date().toLocaleString('ar-OM'),1000);dash()
+
+async function clearVisitorData(){
+  const ok = window.confirm('هل أنت متأكد من مسح جميع بيانات سجل الزوار من Firebase؟\n\nسيتم حذف جميع الزيارات من قاعدة البيانات ولا يمكن التراجع عن العملية.');
+  if(!ok) return;
+  try {
+    await Promise.all(data.map(v=>visitsRef.doc(v.id).delete()));
+    await counterRef.set({lastNumber:0},{merge:true});
+    alert('تم مسح سجل الزوار من Firebase بالكامل بنجاح.');
+  } catch (e) {
+    alert('تعذر مسح السجل من Firebase. تحقق من الاتصال والصلاحيات.');
+    console.error(e);
+  }
+}
+</script></body></html>
