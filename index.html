@@ -41,6 +41,17 @@ linear-gradient(135deg,#063e50 0%,#075d73 48%,#0b7890 100%)}
 .login-card{width:min(430px,100%);background:rgba(255,255,255,.98);border-radius:22px;padding:30px;box-shadow:0 24px 65px #002f3f66;border:1px solid #ffffff70}
 .login-brand{text-align:center;margin-bottom:25px}.login-brand .login-icon{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;font-size:34px;box-shadow:0 10px 24px #075d7340}.login-brand h1{font-size:23px;margin:0 0 8px;color:#0b5368}.login-brand p{margin:0;color:#647b84;font-size:14px;line-height:1.8}
 .login-card label{font-size:14px;margin-top:14px}.login-card input{font-size:16px;padding:13px 14px}.login-card button{width:100%;margin-top:20px;padding:13px;font-size:16px;background:linear-gradient(135deg,var(--teal),var(--teal2));border-radius:11px}.login-card button:disabled{opacity:.65;cursor:not-allowed}.login-error{display:none;margin-top:15px;padding:10px 12px;background:#fff1f0;border:1px solid #f0c4bf;color:#9b302a;border-radius:9px;font-size:13px;line-height:1.7}.login-note{margin-top:17px;text-align:center;color:#78909a;font-size:12px;line-height:1.7}
+.password-field{position:relative;margin-top:0}
+.password-field input{padding-left:88px}
+.password-toggle{position:absolute;left:7px;top:50%;transform:translateY(-50%);width:auto!important;min-width:72px!important;min-height:36px!important;margin:0!important;padding:6px 10px!important;border-radius:9px!important;background:#eef6f8!important;color:#075d73!important;box-shadow:none!important;font-size:12px!important;border:1px solid #d4e6ea!important;z-index:2}
+.password-toggle:hover{background:#e3f1f4!important;transform:translateY(-50%)!important}
+.password-toggle:active{transform:translateY(-50%) scale(.98)!important}
+.login-help-row{display:flex;align-items:center;justify-content:flex-start;margin-top:8px}
+.forgot-password-btn{width:auto!important;min-height:42px!important;margin:0!important;padding:7px 4px!important;background:transparent!important;color:#075d73!important;box-shadow:none!important;border-radius:8px!important;font-size:13px!important;text-decoration:underline;text-underline-offset:3px}
+.forgot-password-btn:hover{background:transparent!important;color:#0b7890!important;transform:none!important}
+.reset-message{display:none;margin-top:10px;padding:10px 12px;border-radius:9px;font-size:13px;line-height:1.7;background:#eef8f2;border:1px solid #bfe0cb;color:#256443}
+.reset-message.error{background:#fff1f0;border-color:#f0c4bf;color:#9b302a}
+
 #appShell{display:none}.user-bar{max-width:1180px;margin:0 auto;padding:10px 18px 0;display:flex;justify-content:flex-start;align-items:center;gap:9px;color:#fff;position:relative;z-index:5}.user-chip{display:inline-flex;align-items:center;gap:8px;background:#ffffff1a;border:1px solid #ffffff38;border-radius:999px;padding:7px 11px;font-size:13px;backdrop-filter:blur(8px)}.logout-btn{padding:7px 12px;background:#ffffff;color:#075d73;border-radius:999px;box-shadow:none;font-size:12px}.logout-btn:hover{background:#edf6f7}
 @media(max-width:520px){.login-card{padding:24px 18px}.login-brand h1{font-size:20px}.user-bar{justify-content:center;flex-wrap:wrap}}
 
@@ -252,9 +263,16 @@ tbody tr:hover{background:#f9fcfd}
       <label for="loginUsername">اسم المستخدم</label>
       <input id="loginUsername" type="text" autocomplete="username" required placeholder="مثال: admin">
       <label for="loginPassword">كلمة المرور</label>
-      <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="أدخل كلمة المرور">
+      <div class="password-field">
+        <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="أدخل كلمة المرور">
+        <button id="passwordToggle" class="password-toggle" type="button" aria-pressed="false" aria-controls="loginPassword" aria-label="إظهار كلمة المرور">إظهار</button>
+      </div>
+      <div class="login-help-row">
+        <button id="forgotPasswordBtn" class="forgot-password-btn" type="button">نسيت كلمة المرور؟</button>
+      </div>
       <button id="loginBtn" type="submit">تسجيل الدخول</button>
-      <div id="loginError" class="login-error"></div>
+      <div id="loginError" class="login-error" role="alert"></div>
+      <div id="resetMessage" class="reset-message" role="status" aria-live="polite"></div>
     </form>
     <div class="login-note">الدخول متاح فقط للمستخدمين المسجلين في Firebase Authentication.</div>
   </div>
@@ -360,6 +378,7 @@ function readableAuthError(err){
   if(code==='auth/network-request-failed') return 'تعذر الاتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.';
   if(code==='auth/user-disabled') return 'هذا المستخدم موقوف. راجع مسؤول النظام.';
   if(code==='auth/operation-not-allowed') return 'يجب تفعيل Email/Password من Firebase Authentication أولًا.';
+  if(code==='auth/invalid-email') return 'صيغة البريد الإلكتروني غير صحيحة.';
   return 'تعذر تسجيل الدخول. تحقق من اسم المستخدم وكلمة المرور وإعدادات Firebase.';
 }
 
@@ -395,6 +414,62 @@ async function logoutUser(){
 }
 
 const loginForm=document.getElementById('loginForm');
+const loginPassword=document.getElementById('loginPassword');
+const passwordToggle=document.getElementById('passwordToggle');
+const forgotPasswordBtn=document.getElementById('forgotPasswordBtn');
+const resetMessage=document.getElementById('resetMessage');
+
+passwordToggle.addEventListener('click',()=>{
+  const showing=loginPassword.type==='text';
+  loginPassword.type=showing?'password':'text';
+  passwordToggle.textContent=showing?'إظهار':'إخفاء';
+  passwordToggle.setAttribute('aria-pressed',String(!showing));
+  passwordToggle.setAttribute('aria-label',showing?'إظهار كلمة المرور':'إخفاء كلمة المرور');
+  loginPassword.focus({preventScroll:true});
+});
+
+forgotPasswordBtn.addEventListener('click',async()=>{
+  const username=document.getElementById('loginUsername').value.trim();
+  const errorBox=document.getElementById('loginError');
+  errorBox.style.display='none';
+  errorBox.textContent='';
+  resetMessage.style.display='none';
+  resetMessage.classList.remove('error');
+  resetMessage.textContent='';
+
+  if(!username){
+    resetMessage.textContent='أدخل اسم المستخدم أو البريد الإلكتروني أولًا، ثم اضغط «نسيت كلمة المرور؟».';
+    resetMessage.classList.add('error');
+    resetMessage.style.display='block';
+    document.getElementById('loginUsername').focus();
+    return;
+  }
+
+  const email=usernameToEmail(username);
+  forgotPasswordBtn.disabled=true;
+  forgotPasswordBtn.textContent='جارٍ إرسال الرابط...';
+  try{
+    await auth.sendPasswordResetEmail(email);
+    resetMessage.textContent='تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد الإلكتروني المرتبط بالحساب. تحقق من صندوق الوارد والرسائل غير المرغوب فيها.';
+    resetMessage.style.display='block';
+  }catch(err){
+    console.error('Password reset error:',err);
+    const code=(err&&err.code)||'';
+    let message='تعذر إرسال رابط إعادة تعيين كلمة المرور. حاول مرة أخرى.';
+    if(code==='auth/invalid-email') message='صيغة البريد الإلكتروني غير صحيحة.';
+    else if(code==='auth/user-not-found') message='لا يوجد حساب مسجل بهذا الاسم أو البريد الإلكتروني.';
+    else if(code==='auth/too-many-requests') message='تم إرسال محاولات كثيرة. انتظر قليلًا ثم حاول مرة أخرى.';
+    else if(code==='auth/network-request-failed') message='تعذر الاتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.';
+    else if(code==='auth/operation-not-allowed') message='ميزة البريد وكلمة المرور غير مفعلة في Firebase Authentication.';
+    resetMessage.textContent=message;
+    resetMessage.classList.add('error');
+    resetMessage.style.display='block';
+  }finally{
+    forgotPasswordBtn.disabled=false;
+    forgotPasswordBtn.textContent='نسيت كلمة المرور؟';
+  }
+});
+
 loginForm.addEventListener('submit',async(e)=>{
   e.preventDefault();
   const username=document.getElementById('loginUsername').value.trim();
@@ -410,6 +485,12 @@ loginForm.addEventListener('submit',async(e)=>{
     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     await auth.signInWithEmailAndPassword(usernameToEmail(username),password);
     document.getElementById('loginPassword').value='';
+    document.getElementById('loginPassword').type='password';
+    passwordToggle.textContent='إظهار';
+    passwordToggle.setAttribute('aria-pressed','false');
+    passwordToggle.setAttribute('aria-label','إظهار كلمة المرور');
+    resetMessage.style.display='none';
+    resetMessage.textContent='';
   }catch(err){
     console.error('Login error:',err);
     errorBox.textContent=readableAuthError(err);
