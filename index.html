@@ -42,8 +42,8 @@ linear-gradient(135deg,#063e50 0%,#075d73 48%,#0b7890 100%)}
 .login-brand{text-align:center;margin-bottom:25px}.login-brand .login-icon{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;font-size:34px;box-shadow:0 10px 24px #075d7340}.login-brand h1{font-size:23px;margin:0 0 8px;color:#0b5368}.login-brand p{margin:0;color:#647b84;font-size:14px;line-height:1.8}
 .login-card label{font-size:14px;margin-top:14px}.login-card input{font-size:16px;padding:13px 14px}.login-card button{width:100%;margin-top:20px;padding:13px;font-size:16px;background:linear-gradient(135deg,var(--teal),var(--teal2));border-radius:11px}.login-card button:disabled{opacity:.65;cursor:not-allowed}.login-error{display:none;margin-top:15px;padding:10px 12px;background:#fff1f0;border:1px solid #f0c4bf;color:#9b302a;border-radius:9px;font-size:13px;line-height:1.7}.login-note{margin-top:17px;text-align:center;color:#78909a;font-size:12px;line-height:1.7}
 .password-field{position:relative;margin-top:0}
-.password-field input{padding-left:88px}
-.password-toggle{position:absolute;left:7px;top:50%;transform:translateY(-50%);width:auto!important;min-width:72px!important;min-height:36px!important;margin:0!important;padding:6px 10px!important;border-radius:9px!important;background:#eef6f8!important;color:#075d73!important;box-shadow:none!important;font-size:12px!important;border:1px solid #d4e6ea!important;z-index:2}
+.password-field input{padding-left:58px}
+.password-toggle{position:absolute;left:7px;top:50%;transform:translateY(-50%);width:40px!important;min-width:40px!important;height:40px!important;min-height:40px!important;margin:0!important;padding:0!important;border-radius:10px!important;background:#eef6f8!important;color:#075d73!important;box-shadow:none!important;border:1px solid #d4e6ea!important;z-index:2;display:grid!important;place-items:center!important}.password-toggle svg{width:21px;height:21px;display:block;pointer-events:none}
 .password-toggle:hover{background:#e3f1f4!important;transform:translateY(-50%)!important}
 .password-toggle:active{transform:translateY(-50%) scale(.98)!important}
 .login-help-row{display:flex;align-items:center;justify-content:flex-start;margin-top:8px}
@@ -265,7 +265,7 @@ tbody tr:hover{background:#f9fcfd}
       <label for="loginPassword">كلمة المرور</label>
       <div class="password-field">
         <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="أدخل كلمة المرور">
-        <button id="passwordToggle" class="password-toggle" type="button" aria-pressed="false" aria-controls="loginPassword" aria-label="إظهار كلمة المرور">إظهار</button>
+        <button id="passwordToggle" class="password-toggle" type="button" aria-pressed="false" aria-controls="loginPassword" aria-label="إظهار كلمة المرور" title="إظهار كلمة المرور"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <div class="login-help-row">
         <button id="forgotPasswordBtn" class="forgot-password-btn" type="button">نسيت كلمة المرور؟</button>
@@ -419,12 +419,17 @@ const passwordToggle=document.getElementById('passwordToggle');
 const forgotPasswordBtn=document.getElementById('forgotPasswordBtn');
 const resetMessage=document.getElementById('resetMessage');
 
+const eyeOpenIcon='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+const eyeClosedIcon='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 4.3A11.4 11.4 0 0 1 12 4c6.5 0 10 8 10 8a18.6 18.6 0 0 1-3.1 4.2"/><path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a10.8 10.8 0 0 0 4.1-.8"/></svg>';
+function setPasswordVisibility(show){
+  loginPassword.type=show?'text':'password';
+  passwordToggle.innerHTML=show?eyeClosedIcon:eyeOpenIcon;
+  passwordToggle.setAttribute('aria-pressed',String(show));
+  passwordToggle.setAttribute('aria-label',show?'إخفاء كلمة المرور':'إظهار كلمة المرور');
+  passwordToggle.setAttribute('title',show?'إخفاء كلمة المرور':'إظهار كلمة المرور');
+}
 passwordToggle.addEventListener('click',()=>{
-  const showing=loginPassword.type==='text';
-  loginPassword.type=showing?'password':'text';
-  passwordToggle.textContent=showing?'إظهار':'إخفاء';
-  passwordToggle.setAttribute('aria-pressed',String(!showing));
-  passwordToggle.setAttribute('aria-label',showing?'إظهار كلمة المرور':'إخفاء كلمة المرور');
+  setPasswordVisibility(loginPassword.type==='password');
   loginPassword.focus({preventScroll:true});
 });
 
@@ -485,10 +490,7 @@ loginForm.addEventListener('submit',async(e)=>{
     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     await auth.signInWithEmailAndPassword(usernameToEmail(username),password);
     document.getElementById('loginPassword').value='';
-    document.getElementById('loginPassword').type='password';
-    passwordToggle.textContent='إظهار';
-    passwordToggle.setAttribute('aria-pressed','false');
-    passwordToggle.setAttribute('aria-label','إظهار كلمة المرور');
+    setPasswordVisibility(false);
     resetMessage.style.display='none';
     resetMessage.textContent='';
   }catch(err){
