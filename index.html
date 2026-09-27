@@ -882,16 +882,18 @@ async function saveVisitorReportPDF(btn){
      ctx.textAlign='center';ctx.fillText('صفحة '+(p+1)+' من '+pages.length,PAGE_W/2,218);
 
      const tableX=65, tableY=252, tableW=PAGE_W-130;
-     const widths=[0.05,0.16,0.11,0.17,0.24,0.10,0.09,0.08].map(v=>v*tableW);
-     const headers=['م','اسم الزائر','الهاتف','القسم','الغرض من الزيارة','التاريخ','الوقت','الحالة'];
+     // ترتيب أعمدة PDF من اليسار إلى اليمين بحيث يظهر الجدول عربيًا من اليمين إلى اليسار:
+     // الحالة في أقصى اليسار، ثم الوقت... واسم الزائر قرب اليمين، ورقم التسلسل في أقصى اليمين.
+     const widths=[0.08,0.09,0.10,0.24,0.17,0.11,0.16,0.05].map(v=>v*tableW);
+     const headers=['الحالة','الوقت','التاريخ','الغرض من الزيارة','القسم','الهاتف','اسم الزائر','م'];
      const headH=66,rowH=78;
      let x=tableX;
      for(let i=0;i<headers.length;i++){drawCell(ctx,headers[i],x,tableY,widths[i],headH,{bg:'#e7f2f5',bold:true,fontSize:20,maxLines:2});x+=widths[i];}
 
      pages[p].forEach((v,idx)=>{
-       const vals=[p*rowsPerPage+idx+1,v.name||'غير مسجل',v.phone||'',v.dept||'',v.purpose||'',formatDateForDisplay(v.date),formatTimeForDisplay(v.time),v.status||''];
+       const vals=[v.status||'',formatTimeForDisplay(v.time),formatDateForDisplay(v.date),v.purpose||'',v.dept||'',v.phone||'',v.name||'غير مسجل',p*rowsPerPage+idx+1];
        let cx=tableX, cy=tableY+headH+idx*rowH;
-       vals.forEach((val,i)=>{drawCell(ctx,val,cx,cy,widths[i],rowH,{bold:i===1,fontSize:i===4?17:18,maxLines:i===4?3:2});cx+=widths[i];});
+       vals.forEach((val,i)=>{drawCell(ctx,val,cx,cy,widths[i],rowH,{bold:i===6,fontSize:i===3?17:18,maxLines:i===3?3:2});cx+=widths[i];});
      });
 
      // Footer
