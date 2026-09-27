@@ -719,11 +719,8 @@ function showCard(v){
  w.addEventListener('load',()=>{
    const d=w.document;
    d.getElementById('printBtn').addEventListener('click',()=>w.print());
-   d.getElementById('saveBtn').addEventListener('click',()=>{
-     const a=d.createElement('a');
-     const blob=new Blob([cardHtml],{type:'text/html;charset=utf-8'});
-     a.href=URL.createObjectURL(blob); a.download='بطاقة_زائر.html'; a.click();
-     setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+   d.getElementById('saveBtn').addEventListener('click',async()=>{
+     await saveVisitorCardPDF(v,d.getElementById('saveBtn'));
    });
    d.getElementById('shareBtn').addEventListener('click',async()=>{
      const text=`بطاقة زائر\nالزائر: ${v.name||''}\nالقسم: ${v.dept||''}\nالغرض من الزيارة: ${v.purpose||''}\nالتاريخ: ${formatDateForDisplay(v.date)} ${formatTimeForDisplay(v.time)}`;
@@ -732,6 +729,110 @@ function showCard(v){
    });
  });
 }
+async function saveVisitorCardPDF(v,btn){
+ const oldText=btn?.textContent;
+ if(btn){btn.disabled=true;btn.textContent='جارٍ تجهيز PDF...';}
+ try{
+   const W=1240,H=1754; // A4 portrait canvas
+   const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
+   const ctx=canvas.getContext('2d');
+   ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
+   ctx.direction='rtl';ctx.textAlign='center';ctx.textBaseline='middle';
+
+   // خلفية البطاقة
+   ctx.fillStyle='#f5fafb';ctx.fillRect(0,0,W,H);
+   ctx.fillStyle='#ffffff';
+   const x=105,y=110,cw=W-210,ch=H-220,r=34;
+   ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+cw-r,y);ctx.quadraticCurveTo(x+cw,y,x+cw,y+r);
+   ctx.lineTo(x+cw,y+ch-r);ctx.quadraticCurveTo(x+cw,y+ch,x+cw-r,y+ch);
+   ctx.lineTo(x+r,y+ch);ctx.quadraticCurveTo(x,y+ch,x,y+ch-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();ctx.fill();
+   ctx.strokeStyle='#0f6f73';ctx.lineWidth=5;ctx.stroke();
+
+   // العنوان
+   ctx.fillStyle='#0b5368';ctx.font='700 54px Tahoma, Arial, sans-serif';
+   ctx.fillText('بطاقة زائر',W/2,205);
+   ctx.fillStyle='#17323a';ctx.font='700 34px Tahoma, Arial, sans-serif';
+   ctx.fillText('دائرة الطرق بمحافظة الداخلية',W/2,270);
+   ctx.strokeStyle='#d5e4e8';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(190,320);ctx.lineTo(W-190,320);ctx.stroke();
+
+   const fields=[
+     ['رقم الزائر',String(v.visitorNo || (data.indexOf(v)+1))],
+     ['اسم الزائر',v.name||'غير مسجل'],
+     ['القسم',v.dept||''],
+     ['الغرض من الزيارة',v.purpose||''],
+     ['التاريخ',formatDateForDisplay(v.date)+'  '+formatTimeForDisplay(v.time)],
+     ['الحالة',v.status||'']
+   ];
+
+   function wrap(text,maxWidth,maxLines=3){
+     text=String(text??'').trim(); if(!text)return [''];
+     const words=text.split(/\s+/),lines=[];let line='';
+     for(const word of words){
+       const t=line?line+' '+word:word;
+       if(ctx.measureText(t).width<=maxWidth||!line)line=t;
+       else{lines.push(line);line=word;if(lines.length>=maxLines-1)break;}
+     }
+     if(line&&lines.length<maxLines)lines.push(line);
+     return lines;
+   }
+
+   let fy=390;
+   for(const [label,value] of fields){
+     const boxH=label==='الغرض من الزيارة'?190:135;
+     ctx.fillStyle='#f8fbfc';ctx.fillRect(175,fy,W-350,boxH-18);
+     ctx.strokeStyle='#dce9ec';ctx.lineWidth=2;ctx.strokeRect(175,fy,W-350,boxH-18);
+     ctx.textAlign='right';ctx.fillStyle='#59737c';ctx.font='700 25px Tahoma, Arial, sans-serif';
+     ctx.fillText(label,W-220,fy+34);
+     ctx.fillStyle='#17323a';ctx.font=(label==='اسم الزائر'?'700 ':'400 ')+'31px Tahoma, Arial, sans-serif';
+     const lines=wrap(value,W-440,label==='الغرض من الزيارة'?4:2);
+     const lineH=43;
+     lines.forEach((line,i)=>ctx.fillText(line,W-220,fy+78+i*lineH,W-440));
+     fy+=boxH;
+   }
+
+   // رمز بصري بسيط كما في البطاقة الأصلية
+   ctx.textAlign='center';ctx.fillStyle='#0f6f73';ctx.font='86px Arial, sans-serif';ctx.fillText('▣',W/2,H-255);
+   ctx.strokeStyle='#d5e4e8';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(190,H-170);ctx.lineTo(W-190,H-170);ctx.stroke();
+   ctx.fillStyle='#60757c';ctx.font='20px Tahoma, Arial, sans-serif';
+   ctx.fillText('جميع الحقوق محفوظة لوزارة النقل والاتصالات وتقنية المعلومات - دائرة الطرق بمحافظة الداخلية 2026',W/2,H-125,W-220);
+
+   const jpegBlob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('JPEG export failed')),'image/jpeg',0.94));
+   const imgBytes=new Uint8Array(await jpegBlob.arrayBuffer());
+
+   function buildSingleImagePdf(bytes,width,height){
+     const enc=new TextEncoder(),chunks=[],offsets=[];let pos=0;
+     const pushText=t=>{const b=enc.encode(t);chunks.push(b);pos+=b.length;};
+     const pushBytes=b=>{chunks.push(b);pos+=b.length;};
+     const start=n=>{offsets[n]=pos;pushText(n+' 0 obj\n');};
+     pushText('%PDF-1.4\n');
+     start(1);pushText('<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+     start(2);pushText('<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n');
+     start(3);pushText('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>\nendobj\n');
+     start(4);pushText('<< /Type /XObject /Subtype /Image /Width '+width+' /Height '+height+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+bytes.length+' >>\nstream\n');
+     pushBytes(bytes);pushText('\nendstream\nendobj\n');
+     const content='q\n595.28 0 0 841.89 0 0 cm\n/Im0 Do\nQ\n';
+     start(5);pushText('<< /Length '+enc.encode(content).length+' >>\nstream\n'+content+'endstream\nendobj\n');
+     const xref=pos;pushText('xref\n0 6\n0000000000 65535 f \n');
+     for(let i=1;i<=5;i++)pushText(String(offsets[i]).padStart(10,'0')+' 00000 n \n');
+     pushText('trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF');
+     return new Blob(chunks,{type:'application/pdf'});
+   }
+
+   const pdfBlob=buildSingleImagePdf(imgBytes,W,H);
+   const url=URL.createObjectURL(pdfBlob);
+   const a=document.createElement('a');a.href=url;
+   a.download='بطاقة_زائر_'+String(v.visitorNo || (data.indexOf(v)+1))+'.pdf';
+   document.body.appendChild(a);a.click();a.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),5000);
+   showToast('تم حفظ بطاقة الزائر بصيغة PDF.','success');
+ }catch(err){
+   console.error('Visitor card PDF error:',err);
+   alert('تعذر إنشاء بطاقة PDF على هذا المتصفح. يمكنك استخدام زر «طباعة» ثم اختيار «حفظ كملف PDF».');
+ }finally{
+   if(btn){btn.disabled=false;btn.textContent=oldText||'حفظ';}
+ }
+}
+
 function formatDateForDisplay(value){
  if(!value) return '';
  const p=String(value).split('-');
